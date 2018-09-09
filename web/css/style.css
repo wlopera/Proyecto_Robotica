@@ -1,0 +1,97 @@
+img {
+    border-radius: 30px;
+    width: 90%;
+}
+
+.nav-title{
+  margin-top: 80px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+/* button recolor */
+.nav-pills > li.active > a {
+  font-size: 12px;
+  background-color: #6C6C6C !important;
+  // Redondear el borde  - selecionar
+  border-color: #6C6C6C !important;
+  border-radius: 25px;
+}
+
+.main {
+    font-size: 12px;
+    background-color: #ffffff !important;
+    color: black;
+    height: 1200px;
+}
+
+
+/* Rectangulo ddefine productos a cultivar */
+.square {
+  height: 40px;
+  width: 80px;
+  color:black;
+  font-size: 14px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.divCenter {
+  display: flex;
+  justify-content: space-around;
+}
+
+.header{
+    background-color: #001a33;
+    min-height: 50px;
+    z-index: 1000;
+    border-radius: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.header .brand i{
+  font-size: 13px;
+  color: #2de80f;
+}
+
+.header .brand a:hover i{
+  color:#b5544a;
+}
+
+.header .heading-font{
+    color: rgba(219,237,252,0.9);
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.box {
+    bottom: 0; /* increase for footer use */
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #1C2833;
+    color: White;
+    height: 1200px;
+}
+
+#sidebar a{
+  color: #98a8b9;
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  padding-left: 0;
+  transition-delay: 0s;
+  transition-duration: 0.25s;
+  transition-property: all;
+  transition-timing-function: ease;
+}
+#sidebar a:hover,
+#sidebar .active a{
+  background: transparent;
+  color:#fff;
+}
