@@ -1,5 +1,5 @@
 <div class="padding">
-    <div class="full col-sm-9">
+    <div class="full col-sm-12">
         <h2>
           <br>
           {{ itemProduct.unit.value }} de {{ itemProduct.name }}
@@ -12,19 +12,27 @@
           <table class="table table-striped" border="2px;">
             <thead>
               <tr>
-                <th>ITERACION</th>
-                <th>DEMANDA</th>
-                <th>PRODUCCION</th>
-                <th>IMPORTACION</th>
+                <th>ID</th>
+                <th>POBLACION</th>
+                <th>DEMANDA ACTUAL</th>
+                <th>OFERTA ACTUAL</th>
+                <th>Importaciones</th>
+                <th>CULTIVO HIDROPÓNICO A SEMBRAR</th>
+                <th>TOTAL OFERTA NACIONAL</th>
+                <th>EXPORTACIONES</th>
                 <th>PASO</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat = "record in records | limitTo:potition | limitTo:-itemProduct.potition">
                 <td>{{record.id}}</td>
+                <td>{{record.currentPoblation}}</td>
                 <td>{{record.consume}}</td>
-                <td>{{record.xCultivate}}</td>
+                <td>{{record.currentOffer}}</td>
                 <td>{{record.xImport}}</td>
+                <td>{{record.xCultivate}}</td>
+                <td>{{record.totalNationalOffer}}</td>
+                <td>{{record.xExport}}</td>
                 <td>{{record.step}}</td>
               </tr>
             </tbody>
@@ -42,18 +50,30 @@
 
         </div>
         <br><br>
-        <h4>Almacen: {{ totalStore }} {{ labelStore }}</h4>
         <br>
-        <div col-sm-12 ng-show="showProduct">
+        <div col-sm-6 ng-show="showProduct">
           <div class="divCenter col-sm-2">
-            <div class="square">{{ xCultivate }} {{ itemProduct.unit.abrev }}</div>
+            <div class="square">
+              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showCultivate" ng-click="cultivate()">
+                  <i class="glyphicon glyphicon-play"></i>
+              </a>
+              Almacén de cultivo:<br>{{ xCultivate }} {{ itemProduct.unit.abrev }}</div>
           </div>
-          <div class="col-sm-8">
+          <div class="col-sm-3">
           </div>
           <div class="divCenter col-sm-2">
-            <div class="square">{{ cultivating }} {{ itemProduct.unit.abrev }}</div>
+            <div class="square">
+              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showProduce" ng-click="produce()">
+                  <i class="glyphicon glyphicon-play"></i>
+              </a>
+              Edificio Hidropónico:<br>{{ cultivating }} {{ itemProduct.unit.abrev }}</div>
+          </div>
+          <div class="col-sm-3">
+          </div>
+          <div class="divCenter col-sm-2">
+            <div class="square">Almacén de cosecha:<br>{{ totalStore }} {{ itemProduct.unit.abrev }}</div>
           </div>
         </div>
-        <div class="col-sm-6" id="progress"></div>
+        <div class="col-sm-3" id="progress"></div>
     </div>
 </div>
