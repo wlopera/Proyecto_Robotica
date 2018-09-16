@@ -7,13 +7,13 @@
   /*****************************************************************
   * Constantes
   ******************************************************************/
-  $scope.daysAYear= 360; // Crecimiento poblacional diario este annnio
+  $scope.daysAYear= 365; // Crecimiento poblacional diario este annnio
 
   /*****************************************************************
   * Variables Iniciales
   ******************************************************************/
   // Tab actual
-  $scope.tab = 2;
+  $scope.tab = 1;
 
   // Avance de la tabla
   $scope.potition = 8;

@@ -1,0 +1,7 @@
+Poblacion - Demanda actual - Oferta Actual - CULTIVO HIDROPÓNICO A SEMBRAR DIARIAMENTE - TOTAL OFERTA NACIONAL (TIERRA + HIDROP. + IMPORTACIONES) [En Ton] - EXPORTACIONES [En Ton]
+ 4.136.523  -  1.241 -  1.300,00 - 200 - 1300 - 59.04
+$C$4+((D2*$C$3)*$C$4) - D13/$C$14 - SUMA(D7:D8) - D21 - D9+D25 - D47-D15
+
+Almacen de cultivo
+Almacen de cosecha
+Edificio hidroponico
