@@ -161,7 +161,7 @@
     demandProduct: 300,  // Tomate [Grs/día/hab.]
     conversionGramsToTons: 1000000, // Conversion de gramos a Ton
     hydroponicOffer: 6,  // OFERTA HIDROPÓNICA
-    dailyIncrementFactor: 1280, // Factor de incremento de cultivo diario [En Ton]
+    dailyIncrementFactor: 1200, // Factor de incremento de cultivo diario [En Ton]
     cultivetesTime: 2, // Tiempo cosecha tomate [En días]
     unit: $scope.units[4], // Unidad base del producto
     color: $scope.colors[1], // Color que identifica al producto
@@ -233,14 +233,31 @@
       // Cosechar el producto
       var totalStoreTemp = produce();
 
+      var id = iteration.id;
+
+      var currentPoblation = $scope.itemProduct.currentPoblation + id * $scope.itemProduct.currentPoblation * $scope.itemProduct.rateGrowth / 100;
+
+      var consume =  currentPoblation * $scope.itemProduct.demandProduct / $scope.itemProduct.conversionGramsToTons;
+
+      var currentOffer = $scope.itemProduct.cultivates + $scope.itemProduct.imports;
+
+      var totalNationalOffer = currentOffer + $scope.totalStore;
+
+      var xImport = totalNationalOffer - consume;
+
       // Crear un nuevo registro
       var record = {
-        id: parseInt(iteration.id),
-        consume: parseInt(iteration.consume),
+        id: parseInt(id),
+        currentPoblation: parseInt(Math.round(currentPoblation)),
+        consume: parseInt(Math.round(consume)),
+        currentOffer: parseInt(Math.round(currentOffer)),
         xCultivate: parseInt(iteration.xCultivate),
-        xImport: parseInt(iteration.xImport),
+        totalNationalOffer: parseInt(Math.round(totalNationalOffer)),
+        xImport: Math.round(xImport).toFixed(2),
         step: parseInt(iteration.step)
       }
+
+console.log("##=> record: ",  record);
 
       $scope.labelStore = " => [ " + totalStoreActual +
         " Almacenado + " + record.xImport +
@@ -253,6 +270,8 @@
 
       // Agregar el nuevo registro a la vista
       $scope.records.push(record);
+
+console.log("##=> $scope.records: ",  $scope.records);
 
       // Ocultar la modal
       $('#recordModal').modal('hide');
