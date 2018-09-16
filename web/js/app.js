@@ -171,9 +171,13 @@
   // Registro actual
   $scope.iteration = {
     id: 0,
-    consume: parseInt($scope.itemProduct.demandProduct),
-    xCultivate: 0,
+    currentPoblation: 0,
+    consume: 0,
+    currentOffer: 0,
     xImport: 0,
+    xCultivate: 0,
+    totalNationalOffer: 0,
+    xExport: 0,
     step: parseInt($scope.itemProduct.cultivetesTime)
   };
 
@@ -213,13 +217,25 @@
 
       $scope.labelStore = $scope.itemProduct.unit.value;
 
+      $scope.iteration.currentPoblation = $scope.itemProduct.currentPoblation +  $scope.iteration.id * $scope.itemProduct.currentPoblation * $scope.itemProduct.rateGrowth / 100;
+
+      var consume =  $scope.iteration.currentPoblation * $scope.itemProduct.demandProduct / $scope.itemProduct.conversionGramsToTons;
+
+      $scope.iteration.consume =  parseInt(Math.round(consume));
+
+      $scope.iteration.currentOffer = $scope.itemProduct.cultivates + $scope.itemProduct.imports;
+
+      $scope.iteration.xImport = $scope.itemProduct.imports;
+
       if($scope.itemProduct.hydroponicOffer > $scope.iteration.id) {
         $scope.iteration.xCultivate = Math.round($scope.iteration.id * ($scope.itemProduct.dailyIncrementFactor/$scope.itemProduct.hydroponicOffer));
       } else {
         $scope.iteration.xCultivate = Math.round($scope.itemProduct.hydroponicOffer * ($scope.itemProduct.dailyIncrementFactor/$scope.itemProduct.hydroponicOffer));
       }
 
-      $scope.iteration.xImport = parseInt($scope.itemProduct.imports);
+      $scope.iteration.totalNationalOffer = $scope.iteration.currentOffer + $scope.totalStore;
+
+      $scope.iteration.xExport = $scope.iteration.totalNationalOffer - consume;
 
       $('#recordModal').modal('show');
     }
@@ -233,31 +249,20 @@
       // Cosechar el producto
       var totalStoreTemp = produce();
 
-      var id = iteration.id;
-
-      var currentPoblation = $scope.itemProduct.currentPoblation + id * $scope.itemProduct.currentPoblation * $scope.itemProduct.rateGrowth / 100;
-
-      var consume =  currentPoblation * $scope.itemProduct.demandProduct / $scope.itemProduct.conversionGramsToTons;
-
-      var currentOffer = $scope.itemProduct.cultivates + $scope.itemProduct.imports;
-
-      var totalNationalOffer = currentOffer + $scope.totalStore;
-
-      var xImport = totalNationalOffer - consume;
-
       // Crear un nuevo registro
       var record = {
-        id: parseInt(id),
-        currentPoblation: parseInt(Math.round(currentPoblation)),
-        consume: parseInt(Math.round(consume)),
-        currentOffer: parseInt(Math.round(currentOffer)),
+        id: parseInt(iteration.id),
+        currentPoblation: parseInt(Math.round(iteration.currentPoblation)),
+        consume: parseInt(Math.round(iteration.consume)),
+        currentOffer: parseInt(Math.round(iteration.currentOffer)),
+        xImport: parseInt(Math.round(iteration.xImport)),
         xCultivate: parseInt(iteration.xCultivate),
-        totalNationalOffer: parseInt(Math.round(totalNationalOffer)),
-        xImport: Math.round(xImport).toFixed(2),
+        totalNationalOffer: parseInt(Math.round(iteration.totalNationalOffer)),
+        xExport: parseInt(Math.round(iteration.xExport)),
         step: parseInt(iteration.step)
       }
 
-console.log("##=> record: ",  record);
+      console.log("##=> record: ",  record);
 
       $scope.labelStore = " => [ " + totalStoreActual +
         " Almacenado + " + record.xImport +

@@ -16,6 +16,7 @@
                 <th>POBLACION</th>
                 <th>DEMANDA ACTUAL</th>
                 <th>OFERTA ACTUAL</th>
+                <th>Importaciones</th>
                 <th>CULTIVO HIDROPÓNICO A SEMBRAR</th>
                 <th>TOTAL OFERTA NACIONAL</th>
                 <th>EXPORTACIONES</th>
@@ -28,9 +29,10 @@
                 <td>{{record.currentPoblation}}</td>
                 <td>{{record.consume}}</td>
                 <td>{{record.currentOffer}}</td>
+                <td>{{record.xImport}}</td>
                 <td>{{record.xCultivate}}</td>
                 <td>{{record.totalNationalOffer}}</td>
-                <td>{{record.xImport}}</td>
+                <td>{{record.xExport}}</td>
                 <td>{{record.step}}</td>
               </tr>
             </tbody>
@@ -50,16 +52,21 @@
         <br><br>
         <h4>Almacen: {{ totalStore }} {{ labelStore }}</h4>
         <br>
-        <div col-sm-12 ng-show="showProduct">
+        <div col-sm-6 ng-show="showProduct">
           <div class="divCenter col-sm-2">
-            <div class="square">{{ xCultivate }} {{ itemProduct.unit.abrev }}</div>
+            <div class="square">Almacén de cultivo:<br>{{ xCultivate }} {{ itemProduct.unit.abrev }}</div>
           </div>
-          <div class="col-sm-8">
+          <div class="col-sm-3">
           </div>
           <div class="divCenter col-sm-2">
-            <div class="square">{{ cultivating }} {{ itemProduct.unit.abrev }}</div>
+            <div class="square">Edificio Hidropónico:<br>{{ cultivating }} {{ itemProduct.unit.abrev }}</div>
+          </div>
+          <div class="col-sm-3">
+          </div>
+          <div class="divCenter col-sm-2">
+            <div class="square">Almacén de cosecha:<br>{{ totalStore }} {{ itemProduct.unit.abrev }}</div>
           </div>
         </div>
-        <div class="col-sm-6" id="progress"></div>
+        <div class="col-sm-3" id="progress"></div>
     </div>
 </div>
