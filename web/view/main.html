@@ -50,16 +50,23 @@
 
         </div>
         <br><br>
-        <h4>Almacen: {{ totalStore }} {{ labelStore }}</h4>
         <br>
         <div col-sm-6 ng-show="showProduct">
           <div class="divCenter col-sm-2">
-            <div class="square">Almacén de cultivo:<br>{{ xCultivate }} {{ itemProduct.unit.abrev }}</div>
+            <div class="square">
+              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showCultivate" ng-click="cultivate()">
+                  <i class="glyphicon glyphicon-play"></i>
+              </a>
+              Almacén de cultivo:<br>{{ xCultivate }} {{ itemProduct.unit.abrev }}</div>
           </div>
           <div class="col-sm-3">
           </div>
           <div class="divCenter col-sm-2">
-            <div class="square">Edificio Hidropónico:<br>{{ cultivating }} {{ itemProduct.unit.abrev }}</div>
+            <div class="square">
+              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showProduce" ng-click="produce()">
+                  <i class="glyphicon glyphicon-play"></i>
+              </a>
+              Edificio Hidropónico:<br>{{ cultivating }} {{ itemProduct.unit.abrev }}</div>
           </div>
           <div class="col-sm-3">
           </div>

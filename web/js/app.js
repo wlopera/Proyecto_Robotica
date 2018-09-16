@@ -21,6 +21,9 @@
   // Mostrar/ocultar boton de procesamiento
   $scope.showButton = true;
 
+  $scope.showProduce = false;
+  $scope.showCultivate = false;
+
   // Bandera para mostrar los legos
   $scope.showProduct = false;
 
@@ -178,7 +181,7 @@
     xCultivate: 0,
     totalNationalOffer: 0,
     xExport: 0,
-    step: parseInt($scope.itemProduct.cultivetesTime)
+    step: 0
   };
 
     /*****************************************************************
@@ -205,6 +208,8 @@
 
       // Población [Hab/día]
       $scope.itemProduct.currentPoblation =  $scope.calcPopulation.currentPoblation
+
+      $scope.iteration.step = parseInt($scope.itemProduct.cultivetesTime);
      }
 
     /**
@@ -244,11 +249,6 @@
      * Permite procesar entrada de datos del modal
      */
     $scope.process = function(iteration) {
-      var totalStoreActual = angular.copy($scope.totalStore);
-
-      // Cosechar el producto
-      var totalStoreTemp = produce();
-
       // Crear un nuevo registro
       var record = {
         id: parseInt(iteration.id),
@@ -262,21 +262,11 @@
         step: parseInt(iteration.step)
       }
 
-      console.log("##=> record: ",  record);
-
-      $scope.labelStore = " => [ " + totalStoreActual +
-        " Almacenado + " + record.xImport +
-        " Importado + " + totalStoreTemp +
-        " Cosechas - " + record.consume +
-        " Consumos ]";
-
       // Productos a cultivar
       $scope.xCultivate = parseInt(record.xCultivate);
 
       // Agregar el nuevo registro a la vista
       $scope.records.push(record);
-
-console.log("##=> $scope.records: ",  $scope.records);
 
       // Ocultar la modal
       $('#recordModal').modal('hide');
@@ -287,41 +277,15 @@ console.log("##=> $scope.records: ",  $scope.records);
 
       $scope.showButton = false;
 
-      cultivate();
-
+      // Cultivo de producto
+      // cultivate();
+      $scope.showCultivate = true;
     };
-
-    /**
-     * Permite realizar proceso de cosechar
-     */
-    function produce() {
-      var totalStoreTemp = 0;
-      angular.forEach($scope.records, function(value, key) {
-        if (value.step != -1) {
-          value.step = parseInt(value.step) - 1;
-          if (value.step === 0) {
-            totalStoreTemp = parseInt(value.xCultivate)
-            $scope.totalStore = parseInt($scope.totalStore) + totalStoreTemp;
-            $scope.cultivating -= totalStoreTemp;
-            value.paso = -1;
-          }
-        }
-      });
-      return totalStoreTemp;
-    };
-
-    /**
-     * Permite asignar valores de lego-producto, edificios y almacen
-     */
-    function lego(color) {
-      $scope.showProduct = true;
-      angular.element('.square').css("background-color", color);
-    }
 
     /**
      * Permite realizar el proceso de mover los robots para cultivar
      */
-    function cultivate() {
+    $scope.cultivate = function() {
       var intX = 100;
       var objDiv = document.getElementById('progress');
       objDiv.innerHTML = $scope.xCultivate + " " + $scope.itemProduct.unit.abrev;
@@ -331,6 +295,8 @@ console.log("##=> $scope.records: ",  $scope.records);
       objDiv.style.width = "10%";
       objDiv.style.height = "5%";
       objDiv.setAttribute("align", "center");
+
+      $scope.showCultivate = false;
 
       if ($scope.xCultivate !== 0) {
         move();
@@ -347,9 +313,9 @@ console.log("##=> $scope.records: ",  $scope.records);
       function move() {
         var objDiv = document.getElementById('progress');
         if (objDiv != null) {
-          objDiv.style.left = (intX += 20).toString() + 'px';
+          objDiv.style.left = (intX += 5).toString() + 'px';
         } //if
-        if (intX < 650) {
+        if (intX < 450) {
           setTimeout(move, 30);
         } else {
           objDiv.innerHTML = "";
@@ -358,11 +324,73 @@ console.log("##=> $scope.records: ",  $scope.records);
           $scope.xCultivate = 0;
           $scope.labelStore = "";
           $scope.showButton = true;
+
+          $scope.showProduce = true;
+
           $scope.$apply();
         }
-
-        return true;
       }
+    }
+
+    /**
+     * Permite realizar proceso de cosechar
+     */
+    $scope.produce = function() {
+      angular.forEach($scope.records, function(value, key) {
+
+        $scope.showProduce = false;
+
+        if (value.step != -1) {
+          value.step = parseInt(value.step) - 1;
+          if (value.step === 0) {
+
+            var intX = 460;
+            var objDiv = document.getElementById('progress');
+            objDiv.innerHTML = value.xCultivate + " " + $scope.itemProduct.unit.abrev;
+            objDiv.style.background = "cyan";
+            objDiv.style.color = "black";
+            objDiv.style.position = "absolute";
+            objDiv.style.width = "10%";
+            objDiv.style.height = "5%";
+            objDiv.setAttribute("align", "center");
+
+            move();
+
+            function move() {
+              var objDiv = document.getElementById('progress');
+              if (objDiv != null) {
+                objDiv.style.left = (intX += 5).toString() + 'px';
+              }
+              if (intX < 950) {
+                setTimeout(move, 30);
+              } else {
+
+                var totalStoreTemp = parseInt(value.xCultivate)
+                $scope.totalStore = parseInt($scope.totalStore) + totalStoreTemp;
+                $scope.cultivating -= totalStoreTemp;
+                value.paso = -1;
+
+                objDiv.innerHTML = "";
+                objDiv.style.background = "";
+                $scope.cultivating += parseInt($scope.xCultivate);
+                $scope.xCultivate = 0;
+                $scope.labelStore = "";
+                $scope.showButton = true;
+                $scope.$apply();
+              }
+              return true;
+            }
+          }
+        }
+      });
+    };
+
+    /**
+     * Permite asignar valores de lego-producto, edificios y almacen
+     */
+    function lego(color) {
+      $scope.showProduct = true;
+      angular.element('.square').css("background-color", color);
     }
 
     $scope.pageAhead = function() {
