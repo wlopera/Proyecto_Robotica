@@ -34,6 +34,7 @@
           <td><label>Importación actual</label></td>
           <td><input type="text" ng-model="itemProduct.imports" placeholder="Importaciones"></td>
         </tr>
+        <tr class="success"><td><label>DEMANDA</label></td><td></td><td></td></tr>
         <tr>
           <td><label>{{itemProduct.name}} [Grs/día/hab.]</label></td>
           <td><label>Demanda diaria de {{itemProduct.name}}(s) en toneladas</label></td>
@@ -44,15 +45,15 @@
           <td><label>Factor de conversión de gramos a toneladas</label></td>
           <td><input type="text" ng-model="itemProduct.conversionGramsToTons" placeholder="Factor de convesión"></td>
         </tr>
-        <tr class="success"><td><label>CULTIVO HIDROPÓNICA</label></td><td></td><td></td></tr>
+        <tr class="success"><td><label>OFERTA HIDROPÓNICA</label></td><td></td><td></td></tr>
         <tr>
-          <td><label>Oferta</label></td>
-          <td><label>Oferta hidropónica</label></td>
+          <td><label>Tiempo</label></td>
+          <td><label>Tiempo en que se desea alcanzar la meta de cultivo diario</label></td>
           <td><input type="text" ng-model="itemProduct.hydroponicOffer" placeholder="Oferta hidropónica"></td>
         </tr>
         <tr>
-          <td><label>Incremento</label></td>
-          <td><label>Factor de incremento de cultivo diario en toneladas</label></td>
+          <td><label>Meta</label></td>
+          <td><label>Meta de cultivo diario para alcanzar la IA en toneladas</label></td>
           <td><input type="text" ng-model="itemProduct.dailyIncrementFactor" placeholder="Factor de incremento diario"></td>
         </tr>
         <tr>
@@ -80,51 +81,53 @@
       <hr>
       <table id="tablaPopulation" class="col-sm-6 table-striped">
         <tr>
-          <td><label>Población actual este año</label></td>
-          <td><input type="text" ng-model="calcPopulation.currentPoblation" placeholder="Población actual"></td>
+          <td><label>Población actual</label></td>
+          <td><input type="text" ng-model="calcPopulation.currentPoblation" placeholder="Población actual este año"></td>
           <td><label>100%</label></td>
         </tr>
         <tr>
-          <td><label>Nacimientos este año</label></td>
-          <td><input type="text" ng-model="calcPopulation.birthsThisYear" placeholder="Nacimientos"></td>
-          <td><label>{{calcPopulation.birthsThisYear/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>Nacimientos</label></td>
+          <td><input type="text" ng-model="calcPopulation.birthsThisYear" placeholder="Nacimientos este año"></td>
+          <td><label>{{calcPopulation.birthsThisYear/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
         <tr>
-          <td><label>Muertes este año</label></td>
-          <td><input type="text" ng-model="calcPopulation.deathsThisYear" placeholder="Muertes"></td>
-          <td><label>{{calcPopulation.deathsThisYear/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>Defunciones</label></td>
+          <td><input type="text" ng-model="calcPopulation.deathsThisYear" placeholder="Defunciones este año"></td>
+          <td><label>{{calcPopulation.deathsThisYear/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
         <tr>
-          <td><label>Inmigración este año</label></td>
-          <td><input type="text" ng-model="calcPopulation.immigrationThisYear" placeholder="Inmigraciones"></td>
-          <td><label>{{calcPopulation.immigrationThisYear/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>Inmigración</label></td>
+          <td><input type="text" ng-model="calcPopulation.immigrationThisYear" placeholder="Inmigraciones este año"></td>
+          <td><label>{{calcPopulation.immigrationThisYear/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
         <tr>
-          <td><label>Emigración este año</label></td>
-          <td><input type="text" ng-model="calcPopulation.emigrationThisYear" placeholder="Emigraciones"></td>
-          <td><label>{{calcPopulation.emigrationThisYear/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>Emigración</label></td>
+          <td><input type="text" ng-model="calcPopulation.emigrationThisYear" placeholder="Emigraciones este año"></td>
+          <td><label>{{calcPopulation.emigrationThisYear/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
         <tr><td><label> </label></td><td></td><td></td></tr>
         <tr>
-          <td><label>Nacimientos menos muertes</label></td>
-          <td><input type="text" ng-model="calcPopulation.birthsMinusDeaths" placeholder="Nacimientos menos muertes"></td>
-          <td><label>{{calcPopulation.birthsMinusDeaths/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>Nacimientos menos defunciones</label></td>
+          <td><input type="text" ng-model="calcPopulation.birthsMinusDeaths" placeholder="Nacimientos menos defunciones"></td>
+          <td><label>{{calcPopulation.birthsMinusDeaths/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
         <tr>
           <td><label>Inmigración menos emigración</label></td>
           <td><input type="text" ng-model="calcPopulation.immigrationMinusEmigration" placeholder="Inmigración menos emigración"></td>
-          <td><label>{{calcPopulation.immigrationMinusEmigration/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>{{calcPopulation.immigrationMinusEmigration/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
+        <!--
         <tr>
           <td><label>Crecimiento poblacional este año</label></td>
           <td><input type="text" ng-model="calcPopulation.populationGrowthThisYear" placeholder="Crecimiento poblacional"></td>
-          <td><label>{{calcPopulation.populationGrowthThisYear/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>{{calcPopulation.populationGrowthThisYear/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
+      -->
         <tr><td><label> </label></td><td></td><td></td></tr>
         <tr>
-          <td><label>Crecimiento poblacional diario este año</label></td>
+          <td><label>Tasa de crecimiento poblacional diario</label></td>
           <td><input type="text" ng-model="calcPopulation.dailyPopulationGrowthThisYear" placeholder="Crecimiento poblacional diario"></td>
-          <td><label>{{calcPopulation.dailyPopulationGrowthThisYear/calcPopulation.currentPoblation*100 | number : 3}}</label></td>
+          <td><label>{{calcPopulation.dailyPopulationGrowthThisYear/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
         </tr>
       </table>
     </div>
