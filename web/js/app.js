@@ -13,7 +13,7 @@
   * Variables Iniciales
   ******************************************************************/
   // Tab actual
-  $scope.tab = 1;
+  $scope.tab = 2;
 
   // Avance de la tabla
   $scope.potition = 8;
@@ -140,21 +140,22 @@
   // Objeto calculo poblacional
   $scope.calcPopulation = {
     currentPoblation: 4136399,  // Poblacion actual [Este annio]
-    birthsThisYear: 52854,      // Nacimientos este annio
-    deathsThisYear:13240,       // Muertes este annio
-    immigrationThisYear: 4969,  // Inmigracion este annio
-    emigrationThisYear: 1000,           // Emigracion este annio
-    birthsMinusDeaths: 39614,   // Nacimientos menos muertes
-    immigrationMinusEmigration: 3969, // Inmigracion menos emigracion
-    populationGrowthThisYear: 43583,  // Crecimiento poblacional este annio
-    dailyPopulationGrowthThisYear: 121 // Crecimiento poblacional diario este annio
+    births: 52854,      // Nacimientos este annio
+    deaths:13240,       // Defunciones este annio
+    immigration: 4969,  // Inmigracion este annio
+    emigration: 1000,   // Emigracion este annio
+    birthsMinusDeaths: 0,       // Nacimientos menos defunciones
+    immigrationMinusEmigration: 0, // Inmigracion menos emigracion
+    populationGrowth: 0, // Tasa de crecimiento poblacional este annio
+    dailyPopulationGrowth: 0, // Tasa de crecimiento poblacional diario
+    dailyPopulationGrowthPercentage: 0 // POrcentaje de la tasa de crecimiento poblacional diario
   }
 
   // Alimento - analisis
   $scope.itemProduct ={
     name: "Tomate",
-    rateGrowth: ($scope.calcPopulation.dailyPopulationGrowthThisYear/$scope.calcPopulation.currentPoblation*100).toFixed(3),  // Tasa crec. [Día]
-    currentPoblation: $scope.calcPopulation.currentPoblation, // Población [Hab/día]
+    rateGrowth: 0,  // Tasa crec. [Día]
+    currentPoblation: 0, // Población [Hab/día]
     cultivates: 300, // La que se recoge que ya está sembrada en tierras
     imports: 1000,   // Esta es la importación actual
     demandProduct: 300,  // Tomate [Grs/día/hab.]
@@ -179,7 +180,28 @@
     /*****************************************************************
      * Ventana Procesamiento: Variables - metodos
      ******************************************************************/
+     $scope.updateData = function() {
+       // Nacimientos menos defunciones
+      $scope.calcPopulation.birthsMinusDeaths = $scope.calcPopulation.births - $scope.calcPopulation.deaths;
 
+      // Inmigracion menos emigracion
+      $scope.calcPopulation.immigrationMinusEmigration = $scope.calcPopulation.immigration - $scope.calcPopulation.emigration;
+
+      // Tasa de crecimiento poblacional este annio
+      $scope.calcPopulation.populationGrowth = $scope.calcPopulation.birthsMinusDeaths + $scope.calcPopulation.immigrationMinusEmigration;
+
+      // Tasa de crecimiento poblacional diario
+      $scope.calcPopulation.dailyPopulationGrowth = parseInt(Math.round($scope.calcPopulation.populationGrowth / $scope.daysAYear));
+
+      // Porcentaje de la tasa de crecimiento poblacional diario
+      $scope.calcPopulation.dailyPopulationGrowthPercentage = ($scope.calcPopulation.populationGrowth / $scope.daysAYear / $scope.calcPopulation.currentPoblation * 100).toFixed(3);
+
+      // Tasa crec. [Día]
+      $scope.itemProduct.rateGrowth = $scope.calcPopulation.dailyPopulationGrowthPercentage;
+
+      // Población [Hab/día]
+      $scope.itemProduct.currentPoblation =  $scope.calcPopulation.currentPoblation
+     }
 
     /**
      * Permite mostrar la ventana modal para ingresar datos a procesar
@@ -336,6 +358,8 @@
       $scope.tab = 3;
       $scope.showModal();
     }
+
+    $scope.updateData();
 
   }]);
 })()
