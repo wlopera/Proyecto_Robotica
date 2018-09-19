@@ -2,7 +2,7 @@
   "use strict";
 
   angular.module('RoboticaApp', [])
-    .controller("RoboticaController", ["$scope", function($scope) {
+    .controller("RoboticaController", ["$scope", "$timeout", function($scope, $timeout) {
 
   /*****************************************************************
   * Constantes
@@ -13,7 +13,7 @@
   * Variables Iniciales
   ******************************************************************/
   // Tab actual
-  $scope.tab = 2;
+  $scope.tab = 1;
 
   // Avance de la tabla
   $scope.potition = 8;
@@ -30,6 +30,7 @@
   // Bandera para iniciar procesamiento
   $scope.showParamButton = true;
   $scope.showProcessButton = true;
+  $scope.showInitButton = true;
 
   // Permite manejo -tabs- de la vista principal
   $scope.setTab = function(newTab) {
@@ -45,6 +46,9 @@
 
   // Total de produccion en almacen 1
   $scope.totalStore = 0;
+
+  // Total temporal de produccion en almacen 1
+  $scope.totalStoreTemp = 0;
 
   // Total de cultivos actuales edificio 1
   $scope.edificio_1 = 0;
@@ -242,7 +246,11 @@
 
       $scope.iteration.xExport = $scope.iteration.totalNationalOffer - consume;
 
-      $('#recordModal').modal('show');
+      if (document.getElementById("chkManual").checked) {
+        $scope.process($scope.iteration);
+      } else {
+        $('#recordModal').modal('show');
+      }
     }
 
     /**
@@ -278,7 +286,6 @@
       $scope.showButton = false;
 
       // Cultivo de producto
-      // cultivate();
       $scope.showCultivate = true;
     };
 
@@ -286,104 +293,84 @@
      * Permite realizar el proceso de mover los robots para cultivar
      */
     $scope.cultivate = function() {
-      var intX = 100;
-      var objDiv = document.getElementById('progress');
-      objDiv.innerHTML = $scope.xCultivate + " " + $scope.itemProduct.unit.abrev;
-      objDiv.style.background = $scope.itemProduct.color.value;
-      objDiv.style.color = "black";
-      objDiv.style.position = "absolute";
-      objDiv.style.width = "10%";
-      objDiv.style.height = "5%";
-      objDiv.setAttribute("align", "center");
-
-      $scope.showCultivate = false;
-
       if ($scope.xCultivate !== 0) {
-        move();
-      } else {
-        objDiv.innerHTML = "";
-        objDiv.style.background = "";
-        $scope.cultivating += parseInt($scope.xCultivate);
-        $scope.xCultivate = 0;
-        $scope.labelStore = "";
-        $scope.showButton = true;
-        $scope.$apply();
-      }
-
-      function move() {
         var objDiv = document.getElementById('progress');
-        if (objDiv != null) {
-          objDiv.style.left = (intX += 5).toString() + 'px';
-        } //if
-        if (intX < 450) {
-          setTimeout(move, 30);
-        } else {
-          objDiv.innerHTML = "";
-          objDiv.style.background = "";
-          $scope.cultivating += parseInt($scope.xCultivate);
-          $scope.xCultivate = 0;
-          $scope.labelStore = "";
-          $scope.showButton = true;
+        objDiv.innerHTML = "Cultivar: " + $scope.xCultivate + " " + $scope.itemProduct.unit.abrev;
+        objDiv.style.background = $scope.itemProduct.color.value;
+        objDiv.style.color = "black";
+        objDiv.style.position = "absolute";
+        objDiv.style.width = "15%";
+        objDiv.style.height = "5%";
+        objDiv.setAttribute("align", "center");
 
-          $scope.showProduce = true;
+        $scope.showCultivate = false;
 
-          $scope.$apply();
-        }
+        $scope.move(100, 450, $scope.processCultivate);
       }
+    }
+
+    $scope.processCultivate = function() {
+      var objDiv = document.getElementById('progress');
+      objDiv.innerHTML = "";
+      objDiv.style.background = "";
+      $scope.cultivating += parseInt($scope.xCultivate);
+      $scope.xCultivate = 0;
+      $scope.labelStore = "";
+      $scope.showProduce = true;
     }
 
     /**
      * Permite realizar proceso de cosechar
      */
-    $scope.produce = function() {
+    $scope.harvest = function() {
       angular.forEach($scope.records, function(value, key) {
-
         $scope.showProduce = false;
-
+        $scope.showButton = true;
         if (value.step != -1) {
           value.step = parseInt(value.step) - 1;
           if (value.step === 0) {
-
-            var intX = 460;
             var objDiv = document.getElementById('progress');
-            objDiv.innerHTML = value.xCultivate + " " + $scope.itemProduct.unit.abrev;
-            objDiv.style.background = "cyan";
+            objDiv.innerHTML = "Cosechar: " + value.xCultivate + " " + $scope.itemProduct.unit.abrev;
+            objDiv.style.background = $scope.itemProduct.color.value;
             objDiv.style.color = "black";
             objDiv.style.position = "absolute";
-            objDiv.style.width = "10%";
+            objDiv.style.width = "15%";
             objDiv.style.height = "5%";
             objDiv.setAttribute("align", "center");
+            $scope.totalStoreTemp = parseInt(value.xCultivate)
 
-            move();
-
-            function move() {
-              var objDiv = document.getElementById('progress');
-              if (objDiv != null) {
-                objDiv.style.left = (intX += 5).toString() + 'px';
-              }
-              if (intX < 950) {
-                setTimeout(move, 30);
-              } else {
-
-                var totalStoreTemp = parseInt(value.xCultivate)
-                $scope.totalStore = parseInt($scope.totalStore) + totalStoreTemp;
-                $scope.cultivating -= totalStoreTemp;
-                value.paso = -1;
-
-                objDiv.innerHTML = "";
-                objDiv.style.background = "";
-                $scope.cultivating += parseInt($scope.xCultivate);
-                $scope.xCultivate = 0;
-                $scope.labelStore = "";
-                $scope.showButton = true;
-                $scope.$apply();
-              }
-              return true;
-            }
+            $scope.move(460, 925, $scope.processHarvest);
           }
         }
       });
     };
+
+    $scope.processHarvest = function() {
+      $scope.totalStore = parseInt($scope.totalStore) + $scope.totalStoreTemp;
+      $scope.cultivating -= $scope.totalStoreTemp;
+
+      var objDiv = document.getElementById('progress');
+      objDiv.innerHTML = "";
+      objDiv.style.background = "";
+      $scope.cultivating += parseInt($scope.xCultivate);
+      $scope.xCultivate = 0;
+      $scope.labelStore = "";
+      $scope.$apply();
+    }
+
+    $scope.move = function(startX, endX, callback) {
+      var objDiv = document.getElementById('progress');
+      if (objDiv != null) {
+        objDiv.style.left = (startX += 5).toString() + 'px';
+      }
+      if (startX < endX) {
+        $timeout(function() {
+            $scope.move(startX, endX, callback);
+        }, 30);
+      } else {
+        callback();
+      }
+    }
 
     /**
      * Permite asignar valores de lego-producto, edificios y almacen
@@ -407,6 +394,7 @@
 
 
     $scope.initProcess = function() {
+      $scope.showInitButton = false;
       $scope.tab = 3;
       $scope.showModal();
     }

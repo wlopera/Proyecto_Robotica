@@ -2,7 +2,7 @@
   <br>
   <h2>
     <br>
-    <a href="#" class="btn btn-primary btn-xs pull-right" ng-click="initProcess()">
+    <a href="#" class="btn btn-primary btn-xs pull-right" ng-show="showInitButton" ng-click="initProcess()">
         <i class="glyphicon glyphicon-plus-sign"></i>
          Iniciar Procesamiento</a>
   </h2>
@@ -43,7 +43,7 @@
         <tr>
           <td><label>Conversión</label></td>
           <td><label>Factor de conversión de gramos a toneladas</label></td>
-          <td><input type="text" ng-model="itemProduct.conversionGramsToTons" placeholder="Factor de convesión"></td>
+          <td><label>{{itemProduct.conversionGramsToTons}}</label></td>
         </tr>
         <tr class="success"><td><label>OFERTA HIDROPÓNICA</label></td><td></td><td></td></tr>
         <tr>
