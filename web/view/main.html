@@ -9,6 +9,7 @@
         </h2>
         <br>
         <div class="">
+          <label>Procesamiento Automático: <input type="checkbox" id = "chkManual"></label><br/>
           <table class="table table-striped" border="2px;">
             <thead>
               <tr>
@@ -63,7 +64,7 @@
           </div>
           <div class="divCenter col-sm-2">
             <div class="square">
-              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showProduce" ng-click="produce()">
+              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showProduce" ng-click="harvest()">
                   <i class="glyphicon glyphicon-play"></i>
               </a>
               Edificio Hidropónico:<br>{{ cultivating }} {{ itemProduct.unit.abrev }}</div>
