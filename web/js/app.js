@@ -1,13 +1,13 @@
 (function() {
   "use strict";
 
-  angular.module('RoboticaApp', [])
-    .controller("RoboticaController", ["$scope", "$timeout", function($scope, $timeout) {
+  angular.module('RoboticaApp', ["ngTable"])
+    .controller("RoboticaController", ["$scope", "$timeout", "NgTableParams", function($scope, $timeout, NgTableParams) {
 
   /*****************************************************************
   * Constantes
   ******************************************************************/
-  $scope.daysAYear= 365; // Crecimiento poblacional diario este annnio
+  $scope.daysAYear= 365; // Crecimiento poblacional diario este año
 
   /*****************************************************************
   * Variables Iniciales
@@ -16,7 +16,7 @@
   $scope.tab = 1;
 
   // Avance de la tabla
-  $scope.potition = 8;
+  $scope.sizetable = 8;
 
   // Mostrar/ocultar boton de procesamiento
   $scope.showButton = true;
@@ -28,7 +28,8 @@
   $scope.showProduct = false;
 
   // Bandera para iniciar procesamiento
-  $scope.showParamButton = true;
+  $scope.showGeneralParametersButton = true;
+  $scope.showFoodDataButton = true;
   $scope.showProcessButton = true;
   $scope.showInitButton = true;
 
@@ -63,87 +64,6 @@
   // Cantidad de producto en cultivo
   $scope.cultivating = 0;
 
-  // Lista de colores disponibles
-  $scope.colors = [{
-      id: 0,
-      name: 'Seleccione',
-      value: 'Red'
-    },
-    {
-      id: 1,
-      name: 'Rojo',
-      value: 'Red'
-    },
-    {
-      id: 2,
-      name: 'Verde',
-      value: 'Green'
-    },
-    {
-      id: 3,
-      name: 'Blanco',
-      value: 'White'
-    },
-    {
-      id: 4,
-      name: 'Amarillo',
-      value: 'Yellow'
-    },
-    {
-      id: 5,
-      name: 'Anaranjado',
-      value: 'orange'
-    },
-    {
-      id: 6,
-      name: 'Marrón',
-      value: 'Brown'
-    },
-    {
-      id: 7,
-      name: 'Morado',
-      value: 'purple'
-    },
-    {
-      id: 8,
-      name: 'Negro',
-      value: 'Black'
-    }
-  ]
-
-  // Lista de unidades disponibles
-  $scope.units = [{
-      id: 0,
-      value: 'Seleccione',
-      abrev: ''
-    },
-    {
-      id: 1,
-      value: 'Cajas',
-      abrev: 'C'
-    },
-    {
-      id: 2,
-      value: 'Kilos',
-      abrev: 'Kg'
-    },
-    {
-      id: 3,
-      value: 'Litros',
-      abrev: 'Li'
-    },
-    {
-      id: 4,
-      value: 'Toneladas',
-      abrev: 'Ton.'
-    },
-    {
-      id: 5,
-      value: 'Unidades',
-      abrev: 'Un.'
-    },
-  ]
-
   // Objeto calculo poblacional
   $scope.calcPopulation = {
     currentPoblation: 4136399,  // Poblacion actual [Este annio]
@@ -170,12 +90,11 @@
     hydroponicOffer: 6,  // OFERTA HIDROPÓNICA
     dailyIncrementFactor: 1200, // Factor de incremento de cultivo diario [En Ton]
     cultivetesTime: 2, // Tiempo cosecha tomate [En días]
-    unit: $scope.units[4], // Unidad base del producto
-    color: $scope.colors[1], // Color que identifica al producto
-    potition: 8 // paginacion
+    unit: "Ton.", // Unidad base del producto
+    color: "RED" // Color que identifica al producto
   }
 
-  // Registro actual
+  // Registro dinamico
   $scope.iteration = {
     id: 0,
     currentPoblation: 0,
@@ -185,8 +104,12 @@
     xCultivate: 0,
     totalNationalOffer: 0,
     xExport: 0,
-    step: 0
+    step: 0,
+    registers: 1,
+    currrent: true
   };
+
+  $scope.currentIteration = {};
 
     /*****************************************************************
      * Ventana Procesamiento: Variables - metodos
@@ -221,10 +144,35 @@
      */
     $scope.showModal = function() {
 
+      var hasValueCurrent = false;
+
+      angular.forEach($scope.records, function(value, key) {
+        if (value.current == true) {
+          hasValueCurrent = value.current;
+        }
+      });
+      if (hasValueCurrent) {
+        nextRegister(false);
+      } else {
+        nextRegister(true);
+      }
+
+      $('#recordModal').modal('show');
+    }
+
+    /**
+    * Permite generar el calculo de la proxima iteracion
+    */
+    var nextRegister = function(valueClass) {
+
+      $scope.iteration.step = parseInt($scope.itemProduct.cultivetesTime) + $scope.records.length;
+
       // Incrementar la iteracion
       $scope.iteration.id = $scope.records.length + 1;
 
-      $scope.labelStore = $scope.itemProduct.unit.value;
+      $scope.iteration.current = valueClass;
+
+      $scope.labelStore = $scope.itemProduct.unit;
 
       $scope.iteration.currentPoblation = $scope.itemProduct.currentPoblation +  $scope.iteration.id * $scope.itemProduct.currentPoblation * $scope.itemProduct.rateGrowth / 100;
 
@@ -246,48 +194,64 @@
 
       $scope.iteration.xExport = $scope.iteration.totalNationalOffer - consume;
 
-      if (document.getElementById("chkManual").checked) {
-        $scope.process($scope.iteration);
-      } else {
-        $('#recordModal').modal('show');
-      }
     }
 
     /**
      * Permite procesar entrada de datos del modal
      */
     $scope.process = function(iteration) {
-      // Crear un nuevo registro
-      var record = {
-        id: parseInt(iteration.id),
-        currentPoblation: parseInt(Math.round(iteration.currentPoblation)),
-        consume: parseInt(Math.round(iteration.consume)),
-        currentOffer: parseInt(Math.round(iteration.currentOffer)),
-        xImport: parseInt(Math.round(iteration.xImport)),
-        xCultivate: parseInt(iteration.xCultivate),
-        totalNationalOffer: parseInt(Math.round(iteration.totalNationalOffer)),
-        xExport: parseInt(Math.round(iteration.xExport)),
-        step: parseInt(iteration.step)
+      var i;
+      for (i = 0; i < iteration.registers; i++) {
+
+        // El primer registro se procesa en la llamada al modal
+        if(i > 0) {
+          nextRegister(false);
+        }
+
+        // Crear un nuevo registro
+        var record = {
+          id: parseInt(iteration.id),
+          currentPoblation: parseInt(Math.round(iteration.currentPoblation)),
+          consume: parseInt(Math.round(iteration.consume)),
+          currentOffer: parseInt(Math.round(iteration.currentOffer)),
+          xImport: parseInt(Math.round(iteration.xImport)),
+          xCultivate: parseInt(iteration.xCultivate),
+          totalNationalOffer: parseInt(Math.round(iteration.totalNationalOffer)),
+          xExport: parseInt(Math.round(iteration.xExport)),
+          step: parseInt(iteration.step),
+          current: iteration.current
+        }
+
+        // Agregar el nuevo registro a la vista
+        $scope.records.push(record);
       }
 
-      // Productos a cultivar
-      $scope.xCultivate = parseInt(record.xCultivate);
-
-      // Agregar el nuevo registro a la vista
-      $scope.records.push(record);
+      lego($scope.itemProduct.color);
 
       // Ocultar la modal
       $('#recordModal').modal('hide');
+      var data = $scope.records;
+      $scope.tableParams = new NgTableParams({ page: 1, count: $scope.sizetable }, { counts: [], dataset: data });
+    };
 
-      lego($scope.itemProduct.color.value);
+    /**
+     * Permite procesar entrada de datos del modal
+     */
+    $scope.processData = function(data) {
 
-      $scope.pageAhead();
+      $scope.currentIteration = data.record;
+
+      // Productos a cultivar
+      $scope.xCultivate = parseInt($scope.currentIteration.xCultivate);
 
       $scope.showButton = false;
 
       // Cultivo de producto
       $scope.showCultivate = true;
-    };
+
+      $scope.records[$scope.currentIteration.id-1].current = false;
+
+    }
 
     /**
      * Permite realizar el proceso de mover los robots para cultivar
@@ -295,8 +259,8 @@
     $scope.cultivate = function() {
       if ($scope.xCultivate !== 0) {
         var objDiv = document.getElementById('progress');
-        objDiv.innerHTML = "Cultivar: " + $scope.xCultivate + " " + $scope.itemProduct.unit.abrev;
-        objDiv.style.background = $scope.itemProduct.color.value;
+        objDiv.innerHTML = "Cultivar: " + $scope.xCultivate + " " + $scope.itemProduct.unit;
+        objDiv.style.background = $scope.itemProduct.color;
         objDiv.style.color = "black";
         objDiv.style.position = "absolute";
         objDiv.style.width = "15%";
@@ -321,24 +285,29 @@
 
     /**
      * Permite realizar proceso de cosechar
+     * TODO :wlopera validar cuando se llegue al final de los registros a procesar
      */
     $scope.harvest = function() {
+      $scope.showProduce = false;
+      $scope.showButton = true;
+
+      $scope.records[$scope.currentIteration.id].current = true;
+      $scope.findNextIteration();
+
       angular.forEach($scope.records, function(value, key) {
-        $scope.showProduce = false;
-        $scope.showButton = true;
+
         if (value.step != -1) {
           value.step = parseInt(value.step) - 1;
           if (value.step === 0) {
             var objDiv = document.getElementById('progress');
-            objDiv.innerHTML = "Cosechar: " + value.xCultivate + " " + $scope.itemProduct.unit.abrev;
-            objDiv.style.background = $scope.itemProduct.color.value;
+            objDiv.innerHTML = "Cosechar: " + value.xCultivate + " " + $scope.itemProduct.unit;
+            objDiv.style.background = $scope.itemProduct.color;
             objDiv.style.color = "black";
             objDiv.style.position = "absolute";
             objDiv.style.width = "15%";
             objDiv.style.height = "5%";
             objDiv.setAttribute("align", "center");
             $scope.totalStoreTemp = parseInt(value.xCultivate)
-
             $scope.move(460, 925, $scope.processHarvest);
           }
         }
@@ -380,24 +349,33 @@
       angular.element('.square').css("background-color", color);
     }
 
-    $scope.pageAhead = function() {
-      if ($scope.records.length > $scope.potition) {
-        $scope.potition += $scope.itemProduct.potition;
+    $scope.findNextIteration = function() {
+      var id = 0;
+      var start = 1;
+      var end = $scope.sizetable;
+      var page;
+
+      angular.forEach($scope.records, function(value, key) {
+        if (value.current == true) {
+          id = value.id;
+        }
+      });
+
+      for (page = 1; page < parseInt($scope.records.length/$scope.sizetable)+1 ; page++) {
+        if(id >= start && id <= end){
+          $scope.tableParams.page(page);
+          return;
+        }
+        start +=$scope.sizetable;
+        end +=$scope.sizetable;
       }
     };
-
-    $scope.pageBehind = function() {
-      if ($scope.potition > $scope.itemProduct.potition) {
-        $scope.potition -= $scope.itemProduct.potition;
-      }
-    };
-
 
     $scope.initProcess = function() {
       $scope.showInitButton = false;
       $scope.tab = 3;
       $scope.showModal();
-    }
+    };
 
     $scope.updateData();
 
