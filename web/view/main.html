@@ -2,55 +2,48 @@
     <div class="full col-sm-12">
         <h2>
           <br>
-          {{ itemProduct.unit.value }} de {{ itemProduct.name }}
+          Toneladas de {{ itemProduct.name }}
           <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showButton" ng-click="showModal()">
               <i class="glyphicon glyphicon-plus-sign"></i>
-               Procesamiento</a>
+                Iniciar procesamiento</a>
         </h2>
-        <br>
         <div class="">
-          <table class="table table-striped" border="2px;">
+          <p>
+            <strong>Páginas: </strong> {{tableParams.page()}}
+            <strong> / :</strong> {{tableParams.count()}}
+            <button type="button" class="btn btn-info btn-xs" ng-click="findNextIteration()">Registro actual</button>
+          </p>
+          <table ng-table="tableParams" class="table" show-filter="true" border="2px;">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>POBLACION</th>
-                <th>DEMANDA ACTUAL</th>
-                <th>OFERTA ACTUAL</th>
+                <th>Id</th>
+                <th>Población</th>
+                <th>Demanda actual</th>
+                <th>Cultio en tierra</th>
                 <th>Importaciones</th>
-                <th>CULTIVO HIDROPÓNICO A SEMBRAR</th>
-                <th>TOTAL OFERTA NACIONAL</th>
-                <th>EXPORTACIONES</th>
-                <th>PASO</th>
+                <th>Oferta hidropónica</th>
+                <th>Exportaciones</th>
+                <th>Procesar</th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat = "record in records | limitTo:potition | limitTo:-itemProduct.potition">
-                <td>{{record.id}}</td>
-                <td>{{record.currentPoblation}}</td>
-                <td>{{record.consume}}</td>
-                <td>{{record.currentOffer}}</td>
-                <td>{{record.xImport}}</td>
-                <td>{{record.xCultivate}}</td>
-                <td>{{record.totalNationalOffer}}</td>
-                <td>{{record.xExport}}</td>
-                <td>{{record.step}}</td>
+              <tr ng-repeat = "record in $data" ng-class="{'current': record.current}">
+                <td class="classTD">{{record.id}}</td>
+                <td class="classTD">{{record.currentPoblation}}</td>
+                <td class="classTD">{{record.consume}}</td>
+                <td class="classTD">{{record.currentOffer}}</td>
+                <td class="classTD">{{record.xImport}}</td>
+                <td class="classTD">{{record.xCultivate}}</td>
+                <td class="classTD">{{record.step}}</td>
+                <td class="classTD">
+                    <a href="#" class="btn btn-primary btn-xs" ng-click="processData(this)" ng-show= record.current>
+                      <i class="glyphicon glyphicon-plus-sign"></i>
+                    </a>
+                </td>
               </tr>
             </tbody>
           </table>
-
-          <div class="divCenter col-sm-12">
-            <button class="btn btn-primary" ng-click="pageBehind()">
-              <i class="glyphicon glyphicon-menu-left"></i>
-            </button>
-            Pagina: {{ potition/itemProduct.potition }} / Registros: {{ records.length}}
-            <button class="btn btn-primary" ng-click="pageAhead()">
-                <i class="glyphicon glyphicon-menu-right"></i>
-            </button>
-          </div>
-
         </div>
-        <br><br>
-        <br>
         <div col-sm-6 ng-show="showProduct">
           <div class="divCenter col-sm-2">
             <div class="square">
@@ -63,7 +56,7 @@
           </div>
           <div class="divCenter col-sm-2">
             <div class="square">
-              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showProduce" ng-click="produce()">
+              <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showProduce" ng-click="harvest()">
                   <i class="glyphicon glyphicon-play"></i>
               </a>
               Edificio Hidropónico:<br>{{ cultivating }} {{ itemProduct.unit.abrev }}</div>

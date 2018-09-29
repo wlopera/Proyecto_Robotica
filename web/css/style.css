@@ -1,6 +1,14 @@
 img {
     border-radius: 30px;
-    width: 90%;
+    height: 355px;
+    width: 50%;
+    margin: 50px 30px 10px 10px;
+
+}
+
+#projectText {
+    margin: 200px 20px 0px 0px;
+    font-size: 14px;
 }
 
 .nav-title{
@@ -13,7 +21,7 @@ img {
 .nav-pills > li.active > a {
   font-size: 12px;
   background-color: #6C6C6C !important;
-  // Redondear el borde  - selecionar
+  Redondear el borde  - selecionar
   border-color: #6C6C6C !important;
   border-radius: 25px;
 }
@@ -93,5 +101,41 @@ img {
 #sidebar a:hover,
 #sidebar .active a{
   background: transparent;
-  color:#fff;
+  color: #fff;
+}
+
+#team {
+    margin-top: 50px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 18px;
+}
+
+#team #info {
+    font-family: 'Rubik', sans-serif;
+    font-size: 15px;
+    color: dimgray;
+}
+
+
+#hidroponia {
+    float: left
+}
+
+#fotos {
+    flex-flow: column;
+}
+
+#fotos #papitaFoto img{
+    margin-top: 570px;
+    width: 70%;
+    height: 130px;
+}
+
+.current {
+  background-color: #D5F5E3;
+  color: BLACK;
+}
+
+.classTD {
+  text-align: center;
 }

@@ -2,15 +2,9 @@
   <br>
   <h2>
     <br>
-    <a href="#" class="btn btn-primary btn-xs pull-right" ng-click="initProcess()">
-        <i class="glyphicon glyphicon-plus-sign"></i>
-         Iniciar Procesamiento</a>
   </h2>
   <div class="full col-sm-10">
-
     <div>
-      <h3>Producto {{itemProduct.name}}</h3>
-      <hr>
       <table id="tablaProduct" class="table table-striped">
         <tr class="success"><td><label>POBLACIÓN</label></td><td></td><td></td></tr>
         <tr>
@@ -23,61 +17,10 @@
           <td><label>Población actual este año</label></td>
           <td><label>{{itemProduct.currentPoblation}}</label></td>
         </tr>
-        <tr class="success"><td><label>OFERTA ACTUAL</label></td><td></td><td></td></tr>
-        <tr>
-          <td><label>Cosecha actual en toneladas</label></td>
-          <td><label>Cultivos que se recogen que ya está sembrada en tierras</label></td>
-          <td><input type="text" ng-model="itemProduct.cultivates" placeholder="Cosecha actual"></td>
-        </tr>
-        <tr>
-          <td><label>Importaciones</label></td>
-          <td><label>Importación actual</label></td>
-          <td><input type="text" ng-model="itemProduct.imports" placeholder="Importaciones"></td>
-        </tr>
-        <tr class="success"><td><label>DEMANDA</label></td><td></td><td></td></tr>
-        <tr>
-          <td><label>Tomates [Grs/día/hab.]</label></td>
-          <td><label>Demanda diaria de tomates en toneladas</label></td>
-          <td><input type="text" ng-model="itemProduct.demandProduct" placeholder="Demanda diaria"></td>
-        </tr>
-        <tr>
-          <td><label>Conversión</label></td>
-          <td><label>Factor de conversión de gramos a toneladas</label></td>
-          <td><input type="text" ng-model="itemProduct.conversionGramsToTons" placeholder="Factor de convesión"></td>
-        </tr>
-        <tr class="success"><td><label>OFERTA HIDROPÓNICA</label></td><td></td><td></td></tr>
-        <tr>
-          <td><label>Tiempo</label></td>
-          <td><label>Tiempo en que se desea alcanzar la meta de cultivo diario</label></td>
-          <td><input type="text" ng-model="itemProduct.hydroponicOffer" placeholder="Oferta hidropónica"></td>
-        </tr>
-        <tr>
-          <td><label>Meta</label></td>
-          <td><label>Meta de cultivo diario para alcanzar la IA en toneladas</label></td>
-          <td><input type="text" ng-model="itemProduct.dailyIncrementFactor" placeholder="Factor de incremento diario"></td>
-        </tr>
-        <tr>
-          <td><label>Tiempo cosecha</label></td>
-          <td><label>Tiempo cosecha tomate en días</label></td>
-          <td><input type="text" ng-model="itemProduct.cultivetesTime" placeholder="Tiempo cosecha" ng-change="updateData()"></td>
-        </tr>
-        <tr class="success"><td><label>PARAMETROS ADICIONALES</label></td><td></td><td></td></tr>
-        <tr>
-          <td><label>Unidad </label></td>
-          <td><label>Unidad del producto a cultivar [Tonelas, Kilos, Litros , Unidades, ...]</label></td>
-          <td><select ng-options="unit as unit.value for unit in units track by unit.id" ng-model="itemProduct.unit"></select></td>
-        </tr>
-        <tr>
-          <td><label>Color</label></td>
-          <td><label>Color que representa al producto</label></td>
-          <td><select ng-options="color as color.name for color in colors track by color.id" ng-model="itemProduct.color"></select></td>
-        </tr>
-      </table>
-    </div>
 
     <br>
     <div>
-      <h3>CÁLCULO POBLACIÓN</h3>
+      <h3>Cálculo de la población</h3>
       <hr>
       <table id="tablaPopulation" class="col-sm-8 table-striped">
         <tr>
@@ -129,5 +72,3 @@
         </tr>
       </table>
     </div>
-  </div>
-</div>
