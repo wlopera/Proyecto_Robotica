@@ -114,6 +114,9 @@
     /*****************************************************************
      * Ventana Procesamiento: Variables - metodos
      ******************************************************************/
+     /**
+     * @class <strong>Inicializa los valores iniciales  del proceso</strong>
+     */
      $scope.updateData = function() {
        // Nacimientos menos defunciones
       $scope.calcPopulation.birthsMinusDeaths = $scope.calcPopulation.births - $scope.calcPopulation.deaths;
@@ -140,10 +143,20 @@
      }
 
     /**
-     * Permite mostrar la ventana modal para ingresar datos a procesar
-     */
+    * @class <strong>Abre la ventana modal para ingresar registros a procesar</strong>
+    * <br><br>
+    * Recorre los registros actuales para validar si existen registros por procesar
+    * <ul>
+    * <li>Existe: Crear nuevos registros, manteniendo el actual como el primero a procesar</li>
+    * <li>No existe: Crear nuevos registros, selecciona el primero agregado como el actual a procesar</li>
+    * </ul>
+   */
     $scope.showModal = function() {
 
+      /**
+      * @description Variable para almacenar si existe registro actua por procesar
+      * @type {boolen}
+      */
       var hasValueCurrent = false;
 
       angular.forEach($scope.records, function(value, key) {
@@ -151,6 +164,7 @@
           hasValueCurrent = value.current;
         }
       });
+
       if (hasValueCurrent) {
         nextRegister(false);
       } else {
@@ -161,8 +175,10 @@
     }
 
     /**
-    * Permite generar el calculo de la proxima iteracion
-    */
+    * @class <strong>Genera registro a procesar</strong>
+    * <br><br>
+    * @param {boolean} valueClass (true) Registro actual
+   */
     var nextRegister = function(valueClass) {
 
       $scope.iteration.step = parseInt($scope.itemProduct.cultivetesTime) + $scope.records.length;
@@ -197,8 +213,16 @@
     }
 
     /**
-     * Permite procesar entrada de datos del modal
-     */
+    * @class <strong>Genera la cantidad de registros requeridas en la vista modal</strong>
+    * <br><br>
+    * <ul>
+    * <li>Crea un regitro</li>
+    * <li>Agregar el nuevo registro a la lista de registros</li>
+    * <li>Actualiza la paginación de la tabla</li>
+    * <li>Cierra la ventana modal</li>
+    * </ul>
+    * @param {object} iteration Datos iniciales o actual del registro
+    */
     $scope.process = function(iteration) {
       var i;
       for (i = 0; i < iteration.registers; i++) {
@@ -234,8 +258,9 @@
       $scope.tableParams = new NgTableParams({ page: 1, count: $scope.sizetable }, { counts: [], dataset: data });
     };
 
-    /**
-     * Permite procesar entrada de datos del modal
+     /**
+     * @class <strong>Inicializa el proceso del registro actual habilita el botón de procesar el cultivo</strong>
+     * @param {object} data Registro actual a procesar
      */
     $scope.processData = function(data) {
 
@@ -253,8 +278,14 @@
 
     }
 
-    /**
-     * Permite realizar el proceso de mover los robots para cultivar
+     /**
+     * @class <strong>Inicializa los valores, colores y datos del registro a cultivar</strong>
+     * <br><br>
+     * <ul>
+     * <li>Inicializa valores del cultivo actual</li>
+     * <li>Llama al robot que realiza los movimientos del cultivo</li>
+     * <li>Agrega callback 'processCultivate' para actualizar datos al finalizar procesamiento</li>
+     * </ul>
      */
     $scope.cultivate = function() {
       if ($scope.xCultivate !== 0) {
@@ -273,6 +304,16 @@
       }
     }
 
+    /**
+    * @class <strong>Función callback 'processCultivate', actualiza datos del procesamiento actual</strong>
+    * <br><br>
+    * <ul>
+    * <li>Cierra el movimiento del robot</li>
+    * <li>Actualiza los datos del edificio de cultivo del producto</li>
+    * <li>Habilita el botón del proceso de cosechar</li>
+    * <li>Habilita el botón de procesamiento del próximo registro a cultivar, en caso de existir</li>
+    * </ul>
+    */
     $scope.processCultivate = function() {
       var objDiv = document.getElementById('progress');
       objDiv.innerHTML = "";
@@ -286,6 +327,17 @@
     /**
      * Permite realizar proceso de cosechar
      * TODO :wlopera validar cuando se llegue al final de los registros a procesar
+     */
+
+     /**
+     * @class <strong>Inicializa los valores, colores y datos del registro a cosechar</strong>
+     * <br><br>
+     * <ul>
+     * <li>Busca si existe registro a cosechar</li>
+     * <li>Inicializa valores del resgitro a cosechar</li>
+     * <li>Llama al robot que realiza los movimientos de cosecha</li>
+     * <li>Agrega callback 'processHarvest' para actualizar datos al finalizar procesamiento</li>
+     * </ul>
      */
     $scope.harvest = function() {
       $scope.showProduce = false;
@@ -314,6 +366,14 @@
       });
     };
 
+    /**
+    * @class <strong>Función callback 'processHarvest', actualiza datos del procesamiento actual</strong>
+    * <br><br>
+    * <ul>
+    * <li>Cierra el movimiento del robot</li>
+    * <li>Actualiza los datos del almacen del producto</li>
+    * </ul>
+    */
     $scope.processHarvest = function() {
       $scope.totalStore = parseInt($scope.totalStore) + $scope.totalStoreTemp;
       $scope.cultivating -= $scope.totalStoreTemp;
@@ -327,6 +387,18 @@
       $scope.$apply();
     }
 
+    /**
+    * @class <strong>Realiza el movimiento de los robots</strong>
+    * <br><br>
+    * <ul>
+    * <li>Mueve el robot desde una posición inicial a una final</li>
+    * <li>Presenta un retrazo de milisegundo/segundos por movimiento </li>
+    * <li>Al finalizar el movimiento llama a la función callback requerida</li>
+    * </ul>
+    * @param {number} startX Posición inicial del movimiento
+    * @param {number} endX Posición final del movimiento
+    * @param {number} callback Función a llamar al finalizar el movimiento
+    */
     $scope.move = function(startX, endX, callback) {
       var objDiv = document.getElementById('progress');
       if (objDiv != null) {
@@ -341,14 +413,24 @@
       }
     }
 
-    /**
-     * Permite asignar valores de lego-producto, edificios y almacen
+     /**
+     * @class <strong>Asigna color de lego-producto, edificios y almacen</strong>
+     * @param {object} color Color actual del robot
      */
     function lego(color) {
       $scope.showProduct = true;
       angular.element('.square').css("background-color", color);
     }
 
+    /**
+    * @class <strong>Permite buscar la página que contiene el registro actual a procesar </strong>
+    * <br><br>
+    * <ul>
+    * <li>Recorre los registros buscando la posición del resgitro actual</li>
+    * <li>Asigna la página que contiene el resgitro actual</li>
+    * <li>Despliega la página que contiene el registro en la tabla</li>
+    * </ul>
+    */
     $scope.findNextIteration = function() {
       var id = 0;
       var start = 1;
@@ -369,12 +451,6 @@
         start +=$scope.sizetable;
         end +=$scope.sizetable;
       }
-    };
-
-    $scope.initProcess = function() {
-      $scope.showInitButton = false;
-      $scope.tab = 3;
-      $scope.showModal();
     };
 
     $scope.updateData();
