@@ -1,39 +1,103 @@
-<div class="full col-sm-6">
-      <br>
-      <br>
-      <br>
-      <h1>Tomate</h1>
-      <hr>
-
-   <table id="tablaFoodData" class="table table-striped">
-      <div>
-        <tr class="success"><td colspan="2"><label>INFORMACIÓN PROVENIENTE DEL MINISTERIO DE CENSO</label></td></tr>
-        <tr>
-          <td><label>Población</label></td>
-          <td><input type="text" ng-model="itemProduct.currentPoblation" placeholder="Población actual"></td>
-        </tr>
-
-        <tr><td></td><td></td></tr>
-        <tr class="success"><td  colspan="2"><label>OFERTA ALIMENTARIA ACTUAL</label></td></tr>
-        <tr class="success"><td  colspan="2"><label>INFORMACIÓN PROVENIENTE DEL MINISTERIO DE AGRICULTURA</label></td></tr>
-        <tr>
-          <td><label>Cosecha en tierra</label></td>
-          <td><input type="text" ng-model="itemProduct.cultivates" placeholder="Cosecha"></td>
-        </tr>
-
-        <tr><td></td><td></td></tr>
-        <tr class="success"><td  colspan="2"><label>INFORMACIÓN PROVENIENTE DE LA AUTORIDAD DE ADUANAS</label></td></tr>
-        <tr>
-          <td><label>Importaciones</label></td>
-          <td><input type="text" ng-model="itemProduct.imports" placeholder="Importaciones"></td>
-        </tr>
-
-        <tr><td></td><td></td></tr>
-        <tr class="success"><td  colspan="2"><label>OFERTA HIDROPÓNICA NUEVA</label></td></tr>
-        <tr>
-          <td><label>Cantidad a cultivar</label></td>
-          <td><input type="text" ng-model="itemProduct.hydroponicOffer" placeholder="Cultivos"></td>
-        </tr>
-      </div>
-    </table>
-</div>
+<br>
+<br>
+<br>
+<br>
+<h1>Nombre del alimento: Tomate</h1>
+<br>
+<hr>
+<!-- Primera tabla -->
+<section id="tablasFoodData">
+<table id="tabla" class="table">
+ <h3>Oferta actual del alimento</h3>
+ <thead>
+   <tr class="success">
+       <th>Variable</th>
+       <th>Descripción</th>
+       <th>Valor</th>
+   </tr>
+ </thead>
+  <tbody>
+   <tr class="active">
+     <td>Cosecha actual [En T/día]</label></td>
+     <td id="description">Cantidad del alimento que se recoge diariamente de los cultivos realizados en tierra</label></td>
+     <td><input type="text" class="form-control" ng-model="itemProduct.currentCrops" placeholder="Cosecha actual"></td>
+   </tr>
+</tbody>
+<tfoot>
+  <tr class="active">
+    <td>Importaciones [En T/día]</td>
+    <td id="description">Importación actual [En toneladas]</td>
+    <td><input type="number" class="form-control" ng-model="itemProduct.imports" placeholder="Importaciones"></td>
+  </tr>
+</tfoot>
+</table>
+<!-- Segunda tabla  -->
+<table id="tabla2" class="table">
+  <h3>Demanda actual del alimento</h3>
+<thead>
+  <tr class="success">
+      <td>Variable</label></td>
+      <td>Descripción</td>
+      <td>Valor</td>
+</thead>
+<tbody>
+  <tr class="active">
+    <td>Demanda actual [Grs/día/hab.]</td>
+    <td id="description">Cantidad del alimento que se consume diariamente por habitante</td>
+    <td><input type="text" class="form-control" ng-model="itemProduct.humanDemand" placeholder="Demanda diaria"></td>
+  </tr>
+</tbody>
+<tfoot>
+  <tr class="active">
+    <td>Conversión</label></td>
+    <td id="description">Factor de conversión de gramos a toneladas</td>
+    <td>{{itemProduct.conversionGramsToTons}}</td>
+  </tr>
+</tfoot>
+</table>
+<!-- Tercera tabla -->
+<table id="tabla3" class="table">
+   <h3>Parámetros de producción hidropónica</h3>
+<thead>
+  <tr class="success">
+      <td>Variable</td>
+      <td>Descripción</td>
+      <td>Valor</td>
+  </tr>
+<tbody>
+   <tr class="active">
+    <td>Cantidad-meta de cultivo diario [En T/día]</td>
+    <td id="description">Cantidad de cultivo diario que se ha decidido alcanzar para lograr la independencia alimentaria</label></td>
+    <td><input type="number" class="form-control" ng-model="itemProduct.dailyIncrementFactor" placeholder="Oferta hidropónica"></td>
+  </tr>
+  <tr>
+      <td>Periodo-meta para alcanzar la cantidad-meta de cultivo diario</td>
+      <td id="description">Periodo de tiempo en el que se desea alcanzar la cantidad-meta de cultivo diario definida</td>
+      <td><input type="number" class="form-control" ng-model="itemProduct.timeForIndependence" placeholder="Factor de incremento diario"></td>
+  </tr>
+<tfoot>
+  <tr class="active">
+      <td>Tiempo de cosecha [En días]</td>
+      <td id="description">Es la cantidad de tiempo, expresado en días, que transcurre desde que la semilla del alimento es sembrada hasta que es cosechada o recogida</td>
+      <td><input type="number" class="form-control" ng-model="itemProduct.harvestTime" placeholder="Tiempo cosecha" ng-change="updateData()"></td>
+  </tr>
+</table>
+<!-- Cuarta tabla-->
+<table id="tabla4" class="table">
+  <h3>Parámetros adicionales de los alimentos</h3>
+<thead>
+  <tr class="success">
+      <td>Variable</td>
+      <td>Descripción</td>
+      <td>Valor</td>
+  </tr>
+</thead>
+<tbody>
+  <tr class="active">
+    <td>Color Asignado</td>
+    <td id="description">Es el color que tendrán las representaciones gráficas en el sistema Web y robótico</td>
+    <td><input class="form-control" ng-model="itemProduct.color" id="disabledInput" type="text" disabled>
+  </tr>
+ </tbody>
+</table>
+</section>
