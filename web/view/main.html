@@ -2,39 +2,43 @@
     <div class="full col-sm-12">
         <h2>
           <br>
-          Toneladas de {{ itemProduct.name }}
-          <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showButton" ng-click="showModal()">
-              <i class="glyphicon glyphicon-plus-sign"></i>
+          Ejecución de producción del {{ itemProduct.name }}
+          <a href="#" class="btn btn-primary btn-md pull-right" ng-show= "showButton" ng-click="showModal()">
+              <i class="glyphicon glyphicon-cog"></i>
                 Iniciar procesamiento</a>
         </h2>
-        <div class="">
+        <div class="iteracion">
           <p>
             <strong>Páginas: </strong> {{tableParams.page()}}
-            <strong> / :</strong> {{tableParams.count()}}
+            <strong> / </strong> {{tableParams.count()}}
             <button type="button" class="btn btn-info btn-xs" ng-click="findNextIteration()">Registro actual</button>
           </p>
           <table ng-table="tableParams" class="table" show-filter="true" border="2px;">
             <thead>
               <tr>
-                <th>Id</th>
+                <th>Día</th>
                 <th>Población</th>
-                <th>Demanda actual</th>
-                <th>Cultio en tierra</th>
-                <th>Importaciones</th>
-                <th>Oferta hidropónica</th>
+                <th>Demanda actual (Ton/día)</th>
+                <th>Producción actual (Ton/día)</th>
+                <th>Importación actual (Ton/día)</th>
+                <th>Cantidad a sembrar (Ton/día)</th>
+                <th>Cantidad a cosechar (Ton/día)</th>
                 <th>Exportaciones</th>
+                <th>Número de Apartamento</th>
                 <th>Procesar</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat = "record in $data" ng-class="{'current': record.current}">
                 <td class="classTD">{{record.id}}</td>
-                <td class="classTD">{{record.currentPoblation}}</td>
-                <td class="classTD">{{record.consume}}</td>
-                <td class="classTD">{{record.currentOffer}}</td>
+                <td class="classTD">{{record.currentPopulation}}</td>
+                <td class="classTD">{{record.demand}}</td>
+                <td class="classTD">{{record.currentProduction}}</td>
                 <td class="classTD">{{record.xImport}}</td>
-                <td class="classTD">{{record.xCultivate}}</td>
-                <td class="classTD">{{record.step}}</td>
+                <td class="classTD">{{record.crop}}</td>
+                <td class="classTD">{{record.xHarvest}}</td>
+                <td class="classTD">{{record.xExport}}</td>
+                <td class="classTD">{{record.apartment}}</td>
                 <td class="classTD">
                     <a href="#" class="btn btn-primary btn-xs" ng-click="processData(this)" ng-show= record.current>
                       <i class="glyphicon glyphicon-plus-sign"></i>
@@ -44,13 +48,18 @@
             </tbody>
           </table>
         </div>
+        <div>
+            <h4 ng-class="{'selectedMessage_1': selectedMessage_1}">{{ messageToHarvest }}</h4>
+            <h4 ng-class="{'selectedMessage_2': selectedMessage_2}">{{ messageToCultivate }}</h4>
+            <br>
+        </div>
         <div col-sm-6 ng-show="showProduct">
           <div class="divCenter col-sm-2">
             <div class="square">
               <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showCultivate" ng-click="cultivate()">
                   <i class="glyphicon glyphicon-play"></i>
               </a>
-              Almacén de cultivo:<br>{{ xCultivate }} {{ itemProduct.unit.abrev }}</div>
+              Almacén de cultivo:<br>{{ crop }} {{ itemProduct.unit.abrev }}</div>
           </div>
           <div class="col-sm-3">
           </div>

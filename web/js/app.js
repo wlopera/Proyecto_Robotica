@@ -7,7 +7,7 @@
   /*****************************************************************
   * Constantes
   ******************************************************************/
-  $scope.daysAYear= 365; // Crecimiento poblacional diario este año
+  $scope.daysAYear= 365; // Cantidad de días en un año
 
   /*****************************************************************
   * Variables Iniciales
@@ -17,6 +17,8 @@
 
   // Avance de la tabla
   $scope.sizetable = 8;
+
+  $scope.messageToCultivate = "";
 
   // Mostrar/ocultar boton de procesamiento
   $scope.showButton = true;
@@ -32,6 +34,9 @@
   $scope.showFoodDataButton = true;
   $scope.showProcessButton = true;
   $scope.showInitButton = true;
+  $scope.nroApartment = 1;
+  $scope.selectedMessage_1 = false;
+  $scope.selectedMessage_2 = false;
 
   // Permite manejo -tabs- de la vista principal
   $scope.setTab = function(newTab) {
@@ -59,17 +64,16 @@
   ];
 
   // Cantidad de producto a cultivar
-  $scope.xCultivate = 0;
-
+  $scope.crop = 0;
   // Cantidad de producto en cultivo
   $scope.cultivating = 0;
 
-  // Objeto calculo poblacional
+  // Este es el objeto que sirve para declarar los valores por defecto para realizar los calculos poblacionales?????
   $scope.calcPopulation = {
-    currentPoblation: 4136399,  // Poblacion actual [Este annio]
-    births: 52854,      // Nacimientos este annio
-    deaths:13240,       // Defunciones este annio
-    immigration: 4969,  // Inmigracion este annio
+    currentPopulation: 4000000,  // Poblacion actual [Este annio]
+    births: 50000,      // Nacimientos este annio
+    deaths:10000,       // Defunciones este annio
+    immigration: 10000,  // Inmigracion este annio
     emigration: 1000,   // Emigracion este annio
     birthsMinusDeaths: 0,       // Nacimientos menos defunciones
     immigrationMinusEmigration: 0, // Inmigracion menos emigracion
@@ -78,35 +82,37 @@
     dailyPopulationGrowthPercentage: 0 // POrcentaje de la tasa de crecimiento poblacional diario
   }
 
-  // Alimento - analisis
+  // Este es el objeto que sirve para definir las características principales del alimento???
   $scope.itemProduct ={
     name: "Tomate",
-    rateGrowth: 0,  // Tasa crec. [Día]
-    currentPoblation: 0, // Población [Hab/día]
-    cultivates: 300, // La que se recoge que ya está sembrada en tierras
-    imports: 1000,   // Esta es la importación actual
-    demandProduct: 300,  // Tomate [Grs/día/hab.]
-    conversionGramsToTons: 1000000, // Conversion de gramos a Ton
-    hydroponicOffer: 6,  // OFERTA HIDROPÓNICA
+    rateGrowth: 0,  // Tasa diaria de crecimiento de la población
+    currentPopulation: 0, // Población actual
+    currentcrops: 300, // Son los cultivos en tierra que se producen actualmente, expresado en toneladas
+    imports: 1000,   // Es la importación actual del alimento, expresado en toneladas
+    humanDemand: 300,  // Es la cantidad (en gramos) del alimento que demanda diariamente un habitante
+    conversionGramsToTons: 1000000, // Factor de conversión de gramos a Ton
+    timeForIndependence: 12,  // Es el tiempo en el que desea lograr la independencia alimentaria
     dailyIncrementFactor: 1200, // Factor de incremento de cultivo diario [En Ton]
-    cultivetesTime: 2, // Tiempo cosecha tomate [En días]
+    harvestTime: 3, // Tiempo cosecha tomate [En días]
     unit: "Ton.", // Unidad base del producto
-    color: "RED" // Color que identifica al producto
-  }
+    color: "Red" // Color que identifica al producto
+};
 
   // Registro dinamico
   $scope.iteration = {
     id: 0,
-    currentPoblation: 0,
-    consume: 0,
-    currentOffer: 0,
+    currentPopulation: 0,
+    demand: 0,
+    currentProduction: 0,
     xImport: 0,
-    xCultivate: 0,
+    crop: 0,
     totalNationalOffer: 0,
     xExport: 0,
+    xHarvest: 0,
+    apartment:0,
     step: 0,
     registers: 1,
-    currrent: true
+    current: true
   };
 
   $scope.currentIteration = {};
@@ -131,15 +137,15 @@
       $scope.calcPopulation.dailyPopulationGrowth = parseInt(Math.round($scope.calcPopulation.populationGrowth / $scope.daysAYear));
 
       // Porcentaje de la tasa de crecimiento poblacional diario
-      $scope.calcPopulation.dailyPopulationGrowthPercentage = ($scope.calcPopulation.populationGrowth / $scope.daysAYear / $scope.calcPopulation.currentPoblation * 100).toFixed(3);
+      $scope.calcPopulation.dailyPopulationGrowthPercentage = ($scope.calcPopulation.populationGrowth / $scope.daysAYear / $scope.calcPopulation.currentPopulation * 100).toFixed(3);
 
       // Tasa crec. [Día]
       $scope.itemProduct.rateGrowth = $scope.calcPopulation.dailyPopulationGrowthPercentage;
 
       // Población [Hab/día]
-      $scope.itemProduct.currentPoblation =  $scope.calcPopulation.currentPoblation
+      $scope.itemProduct.currentPopulation =  $scope.calcPopulation.currentPopulation
 
-      $scope.iteration.step = parseInt($scope.itemProduct.cultivetesTime);
+      $scope.iteration.step = parseInt($scope.itemProduct.harvestTime);
      }
 
     /**
@@ -181,7 +187,7 @@
    */
     var nextRegister = function(valueClass) {
 
-      $scope.iteration.step = parseInt($scope.itemProduct.cultivetesTime) + $scope.records.length;
+      $scope.iteration.step = parseInt($scope.itemProduct.harvestTime) + $scope.records.length +1;
 
       // Incrementar la iteracion
       $scope.iteration.id = $scope.records.length + 1;
@@ -190,25 +196,26 @@
 
       $scope.labelStore = $scope.itemProduct.unit;
 
-      $scope.iteration.currentPoblation = $scope.itemProduct.currentPoblation +  $scope.iteration.id * $scope.itemProduct.currentPoblation * $scope.itemProduct.rateGrowth / 100;
+      // Se calcula la población actual multiplicando la población ...
+      $scope.iteration.currentPopulation = $scope.itemProduct.currentPopulation +  $scope.iteration.id * $scope.itemProduct.currentPopulation * $scope.itemProduct.rateGrowth / 100;
 
-      var consume =  $scope.iteration.currentPoblation * $scope.itemProduct.demandProduct / $scope.itemProduct.conversionGramsToTons;
+      var demand =  $scope.iteration.currentPopulation * $scope.itemProduct.humanDemand / $scope.itemProduct.conversionGramsToTons;
 
-      $scope.iteration.consume =  parseInt(Math.round(consume));
+      $scope.iteration.demand =  parseInt(Math.round(demand));
 
-      $scope.iteration.currentOffer = $scope.itemProduct.cultivates + $scope.itemProduct.imports;
+      $scope.iteration.currentProduction = $scope.itemProduct.currentcrops;
 
       $scope.iteration.xImport = $scope.itemProduct.imports;
 
-      if($scope.itemProduct.hydroponicOffer > $scope.iteration.id) {
-        $scope.iteration.xCultivate = Math.round($scope.iteration.id * ($scope.itemProduct.dailyIncrementFactor/$scope.itemProduct.hydroponicOffer));
+      if($scope.itemProduct.timeForIndependence > $scope.iteration.id) {
+        $scope.iteration.crop = Math.round($scope.iteration.id * ($scope.itemProduct.dailyIncrementFactor/$scope.itemProduct.timeForIndependence));
       } else {
-        $scope.iteration.xCultivate = Math.round($scope.itemProduct.hydroponicOffer * ($scope.itemProduct.dailyIncrementFactor/$scope.itemProduct.hydroponicOffer));
+        $scope.iteration.crop = Math.round($scope.itemProduct.timeForIndependence * ($scope.itemProduct.dailyIncrementFactor/$scope.itemProduct.timeForIndependence));
       }
 
-      $scope.iteration.totalNationalOffer = $scope.iteration.currentOffer + $scope.totalStore;
+      $scope.iteration.totalNationalOffer = $scope.iteration.currentProduction + $scope.iteration.xImport;
 
-      $scope.iteration.xExport = $scope.iteration.totalNationalOffer - consume;
+      $scope.iteration.xExport = $scope.iteration.totalNationalOffer - $scope.iteration.demand;
 
     }
 
@@ -232,16 +239,28 @@
           nextRegister(false);
         }
 
+        var xHarvest = 0;
+
+        if ($scope.records.length > $scope.itemProduct.harvestTime-1) {
+          xHarvest = $scope.records[$scope.records.length-$scope.itemProduct.harvestTime].crop;
+        }
+
+        if ($scope.nroApartment > $scope.itemProduct.harvestTime){
+          $scope.nroApartment = 1;
+        }
+
         // Crear un nuevo registro
         var record = {
           id: parseInt(iteration.id),
-          currentPoblation: parseInt(Math.round(iteration.currentPoblation)),
-          consume: parseInt(Math.round(iteration.consume)),
-          currentOffer: parseInt(Math.round(iteration.currentOffer)),
+          currentPopulation: parseInt(Math.round(iteration.currentPopulation)),
+          demand: parseInt(Math.round(iteration.demand)),
+          currentProduction: parseInt(Math.round(iteration.currentProduction)),
           xImport: parseInt(Math.round(iteration.xImport)),
-          xCultivate: parseInt(iteration.xCultivate),
+          crop: parseInt(iteration.crop),
           totalNationalOffer: parseInt(Math.round(iteration.totalNationalOffer)),
           xExport: parseInt(Math.round(iteration.xExport)),
+          xHarvest:parseInt(Math.round(xHarvest)),
+          apartment:parseInt(Math.round($scope.nroApartment++)),
           step: parseInt(iteration.step),
           current: iteration.current
         }
@@ -267,14 +286,30 @@
       $scope.currentIteration = data.record;
 
       // Productos a cultivar
-      $scope.xCultivate = parseInt($scope.currentIteration.xCultivate);
+      $scope.crop = parseInt($scope.currentIteration.crop);
 
       $scope.showButton = false;
 
-      // Cultivo de producto
-      $scope.showCultivate = true;
+      if($scope.currentIteration.id < $scope.itemProduct.harvestTime + 1) {
+        // Procesar registros de cosechar - aun no se inicia la etapa de cosecha
+        $scope.harvest();
+        $scope.showCultivate = true;
+      } else  {
+        // Mostrar boton de cosechar
+        $scope.showProduce = true;
+        $scope.selectedMessage_1 = true;
+      }
 
       $scope.records[$scope.currentIteration.id-1].current = false;
+
+      if (data.record.xHarvest > 0) {
+        $scope.messageToHarvest = "Instrucción para el robot: Día " + $scope.currentIteration.id + ": Cosechar " + data.record.xHarvest + " toneladas de " + $scope.itemProduct.name + ", Apartamento: " + data.record.apartment;
+        $scope.selectedMessage_1 = true;
+        $scope.selectedMessage_2 = false;
+      } else {
+        $scope.selectedMessage_2 = true;
+      }
+      $scope.messageToCultivate = "Instrucción para el robot: Día " + $scope.currentIteration.id + ": Cultivar " +  $scope.crop + " toneladas de " + $scope.itemProduct.name + ", Apartamento: " + data.record.apartment;
 
     }
 
@@ -288,9 +323,9 @@
      * </ul>
      */
     $scope.cultivate = function() {
-      if ($scope.xCultivate !== 0) {
+      if ($scope.crop !== 0) {
         var objDiv = document.getElementById('progress');
-        objDiv.innerHTML = "Cultivar: " + $scope.xCultivate + " " + $scope.itemProduct.unit;
+        objDiv.innerHTML = "Cultivar: " + $scope.crop + " " + $scope.itemProduct.unit;
         objDiv.style.background = $scope.itemProduct.color;
         objDiv.style.color = "black";
         objDiv.style.position = "absolute";
@@ -318,10 +353,14 @@
       var objDiv = document.getElementById('progress');
       objDiv.innerHTML = "";
       objDiv.style.background = "";
-      $scope.cultivating += parseInt($scope.xCultivate);
-      $scope.xCultivate = 0;
+      $scope.cultivating += parseInt($scope.crop);
+      $scope.crop = 0;
       $scope.labelStore = "";
-      $scope.showProduce = true;
+      $scope.messageToHarvest = "";
+      $scope.messageToCultivate = "";
+      $scope.records[$scope.currentIteration.id].current = true;
+      $scope.selectedMessage_1 = false;
+      $scope.selectedMessage_2 = false;
     }
 
     /**
@@ -343,7 +382,7 @@
       $scope.showProduce = false;
       $scope.showButton = true;
 
-      $scope.records[$scope.currentIteration.id].current = true;
+      //$scope.records[$scope.currentIteration.id].current = true;
       $scope.findNextIteration();
 
       angular.forEach($scope.records, function(value, key) {
@@ -352,18 +391,19 @@
           value.step = parseInt(value.step) - 1;
           if (value.step === 0) {
             var objDiv = document.getElementById('progress');
-            objDiv.innerHTML = "Cosechar: " + value.xCultivate + " " + $scope.itemProduct.unit;
+            objDiv.innerHTML = "Cosechar: " + value.crop + " " + $scope.itemProduct.unit;
             objDiv.style.background = $scope.itemProduct.color;
             objDiv.style.color = "black";
             objDiv.style.position = "absolute";
             objDiv.style.width = "15%";
             objDiv.style.height = "5%";
             objDiv.setAttribute("align", "center");
-            $scope.totalStoreTemp = parseInt(value.xCultivate)
+            $scope.totalStoreTemp = parseInt(value.crop);
             $scope.move(460, 925, $scope.processHarvest);
           }
         }
       });
+
     };
 
     /**
@@ -376,13 +416,17 @@
     */
     $scope.processHarvest = function() {
       $scope.totalStore = parseInt($scope.totalStore) + $scope.totalStoreTemp;
+
       $scope.cultivating -= $scope.totalStoreTemp;
+
+      // Mostrat boton de cultivar
+      $scope.showCultivate = true;
+      $scope.selectedMessage_1 = false;
+      $scope.selectedMessage_2 = true;
 
       var objDiv = document.getElementById('progress');
       objDiv.innerHTML = "";
       objDiv.style.background = "";
-      $scope.cultivating += parseInt($scope.xCultivate);
-      $scope.xCultivate = 0;
       $scope.labelStore = "";
       $scope.$apply();
     }

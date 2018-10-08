@@ -8,39 +8,39 @@ aria-labelledby="myModalLabel" aria-hidden="false">
             <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
         </button>
-      <h4 class="modal-title" id="myModalLabel">Análisis Alimentario</h4>
+      <h4 class="modal-title" id="myModalLabel">Datos provenientes de los diferentes ministerios</h4>
     </div>
 
     <div class="modal-body">
-        <form name="roboticaForm" id="roboticaForm">
-            <p>Introduzca la Demanda, Producción e Importación a evaluar</p>
-
+        <form name="roboticaForm" id="FormData">
             <div class="form-group">
-                <label for="demanda">Demanda</label>
+                <label for="demanda">Indique la demanda de {{ itemProduct.name }} a ser cubierta (Ton/día)</label><br>
+                <p>(Datos provenientes del Ministerio para la Alimentación)</p>
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="glyphicon glyphicon-user"></i>
                     </div>
-                    <input ng-model="iteration.consume" required name=demanda id="demanda"
-                    class="form-control" type="text"
-                    placeholder="Introduzca la demanda a procesar">
+                    <input ng-model="iteration.demand" required name="demanda" id="demanda"
+                    class="form-control" type="text" placeholder="Introduzca la demanda a procesar">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="producir">Producción</label>
+                <label for="producir">Indique la producción actual de {{ itemProduct.name }} (Ton/día)</label>
+                <p>(Datos provenientes del Ministerio de la Agricultura)</p>
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="glyphicon glyphicon-stats"></i>
                     </div>
-                    <input ng-model="iteration.xCultivate" required name="producir" id="producir"
+                    <input ng-model="iteration.Crop" required name="producir" id="producir"
                     class="form-control" type="text"
                     placeholder="Introduzca la cantidad de cultivos">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="importar">Importaciones</label>
+                <label for="importar">Indique la cantidad de importaciones de {{ itemProduct.name }} (Ton/día)</label>
+                <p>(Datos provenientes del Ministerio de Comercio)</p>
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="glyphicon glyphicon-send"></i>

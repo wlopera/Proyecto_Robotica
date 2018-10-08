@@ -6,10 +6,16 @@ img {
 
 }
 
-#projectText {
-    margin: 200px 20px 0px 0px;
-    font-size: 14px;
+h3 {
+    text-align: center;
 }
+
+#projectText {
+    margin-top: 200px;
+    margin-right: 5px;
+    font-size: 15px;
+}
+
 
 .nav-title{
   margin-top: 80px;
@@ -65,16 +71,20 @@ img {
   color: #2de80f;
 }
 
-.header .brand a:hover i{
-  color:#b5544a;
+.header .brand a:hover i {
+    color: #f41212;
 }
 
-.header .heading-font{
-    color: rgba(219,237,252,0.9);
-    font-size: 14px;
-    letter-spacing: 1px;
-    padding-top: 0;
-    padding-bottom: 0;
+.header .brand .heading-font {
+    font-family: monospace;
+    color: #2de80f;
+    font-size: 16px;
+    padding: 0px;
+    font-style: italic;
+}
+
+.header .brand a:hover span{
+    color: #f41212;
 }
 
 .box {
@@ -84,7 +94,6 @@ img {
     right: 0;
     top: 0;
     background-color: #1C2833;
-    color: White;
     height: 1200px;
 }
 
@@ -92,6 +101,7 @@ img {
   color: #98a8b9;
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 13px;
+  margin-left: 20px;
   padding-left: 0;
   transition-delay: 0s;
   transition-duration: 0.25s;
@@ -99,21 +109,20 @@ img {
   transition-timing-function: ease;
 }
 #sidebar a:hover,
-#sidebar .active a{
+#sidebar .active a {
+  margin-left: 5px;
   background: transparent;
   color: #fff;
 }
 
 #team {
-    margin-top: 50px;
-    font-family: 'Rubik', sans-serif;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 #team #info {
-    font-family: 'Rubik', sans-serif;
-    font-size: 15px;
+    list-style-type: none;
     color: dimgray;
+    font-style: normal;
 }
 
 
@@ -126,16 +135,64 @@ img {
 }
 
 #fotos #papitaFoto img{
-    margin-top: 570px;
+    margin-top: 420px;
     width: 70%;
     height: 130px;
+}
+
+#tablaPopulation {
+    font-size: 16px;
+    width: 1000px;
+    height: 500px;
+}
+
+#tablasFoodData {
+    margin-right: 20px;
+    font-size: 16px;
+}
+
+table[id^='tabla'] {
+    margin-bottom: 100px;
+}
+
+#tablasFoodData thead {
+    font-weight: bold;
+}
+
+#description {
+    font-weight: lighter;
+    font-size: 14px;
+}
+
+h1 {
+    color: #397690;
 }
 
 .current {
   background-color: #D5F5E3;
   color: BLACK;
+  border-style: double;
+  border-color: Blue;
 }
 
 .classTD {
   text-align: center;
+}
+
+.iteracion {
+    margin-top: 50px;
+}
+
+.selectedMessage_1{
+  background-color: #D5F5E3;
+  color: BLACK;
+  border-style: double;
+  border-color: Blue;
+}
+
+.selectedMessage_2{
+  background-color: #D5F5E3;
+  color: BLACK;
+  border-style: double;
+  border-color: Blue;
 }
