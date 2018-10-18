@@ -1,8 +1,57 @@
 (function() {
   "use strict";
 
-  angular.module('RoboticaApp', ["ngTable"])
+angular.module('RoboticaApp', ["ngTable"])
     .controller("RoboticaController", ["$scope", "$timeout", "NgTableParams", function($scope, $timeout, NgTableParams) {
+
+      // Objeto para definir las características principales del alimento
+      $scope.itemProduct ={};
+
+      // Registro de iteracion
+      $scope.records = [];
+
+      // Registros de tomates
+      $scope.tomatoRecords = [];
+
+      $scope.lettuceRecords = [];
+
+      // Arreglo  con las características principales de los alimento
+      $scope.itemProducts = [
+        {
+          name: "Tomate",
+          rateGrowth: 0,  // Tasa diaria de crecimiento de la población
+          currentPopulation: 0, // Población actual
+          currentCrops: 300, // Son los cultivos en tierra que se producen actualmente, expresado en toneladas
+          imports: 1000,   // Es la importación actual del alimento, expresado en toneladas
+          humanDemand: 300,  // Es la cantidad (en gramos) del alimento que demanda diariamente un habitante
+          conversionGramsToTons: 1000000, // Factor de conversión de gramos a Ton
+          timeForIndependence: 12,  // Es el tiempo en el que desea lograr la independencia alimentaria
+          dailyIncrementFactor: 1200, // Factor de incremento de cultivo diario [En Ton]
+          harvestTime: 3, // Tiempo cosecha tomate [En días]
+          unit: "Ton.", // Unidad base del producto
+          color: "Red" // Color que identifica al producto
+        },
+        {
+          name: "Lechuga",
+          rateGrowth: 0,  // Tasa diaria de crecimiento de la población
+          currentPopulation: 0, // Población actual
+          currentCrops: 500, // Son los cultivos en tierra que se producen actualmente, expresado en toneladas
+          imports: 1500,   // Es la importación actual del alimento, expresado en toneladas
+          humanDemand: 500,  // Es la cantidad (en gramos) del alimento que demanda diariamente un habitante
+          conversionGramsToTons: 1000000, // Factor de conversión de gramos a Ton
+          timeForIndependence: 12,  // Es el tiempo en el que desea lograr la independencia alimentaria
+          dailyIncrementFactor: 1500, // Factor de incremento de cultivo diario [En Ton]
+          harvestTime: 2, // Tiempo cosecha tomate [En días]
+          unit: "Ton.", // Unidad base del producto
+          color: "Green" // Color que identifica al producto
+        }
+      ];
+
+      // Combo de productos -tomate - lechuga
+      $scope.products = [
+        {'code':1, 'name':'tomate'},
+        {'code':2, 'name':'lechuga'}
+      ];
 
   /*****************************************************************
   * Constantes
@@ -13,7 +62,7 @@
   * Variables Iniciales
   ******************************************************************/
   // Tab actual
-  $scope.tab = 1;
+  $scope.tab = 3;
 
   // Avance de la tabla
   $scope.sizetable = 8;
@@ -59,12 +108,9 @@
   // Total de cultivos actuales edificio 1
   $scope.edificio_1 = 0;
 
-  // Registro de iteracion
-  $scope.records = [
-  ];
-
   // Cantidad de producto a cultivar
   $scope.crop = 0;
+
   // Cantidad de producto en cultivo
   $scope.cultivating = 0;
 
@@ -81,22 +127,6 @@
     dailyPopulationGrowth: 0, // Tasa de crecimiento poblacional diario
     dailyPopulationGrowthPercentage: 0 // POrcentaje de la tasa de crecimiento poblacional diario
   }
-
-  // Este es el objeto que sirve para definir las características principales del alimento???
-  $scope.itemProduct ={
-    name: "Tomate",
-    rateGrowth: 0,  // Tasa diaria de crecimiento de la población
-    currentPopulation: 0, // Población actual
-    currentcrops: 300, // Son los cultivos en tierra que se producen actualmente, expresado en toneladas
-    imports: 1000,   // Es la importación actual del alimento, expresado en toneladas
-    humanDemand: 300,  // Es la cantidad (en gramos) del alimento que demanda diariamente un habitante
-    conversionGramsToTons: 1000000, // Factor de conversión de gramos a Ton
-    timeForIndependence: 12,  // Es el tiempo en el que desea lograr la independencia alimentaria
-    dailyIncrementFactor: 1200, // Factor de incremento de cultivo diario [En Ton]
-    harvestTime: 3, // Tiempo cosecha tomate [En días]
-    unit: "Ton.", // Unidad base del producto
-    color: "Red" // Color que identifica al producto
-};
 
   // Registro dinamico
   $scope.iteration = {
@@ -200,10 +230,9 @@
       $scope.iteration.currentPopulation = $scope.itemProduct.currentPopulation +  $scope.iteration.id * $scope.itemProduct.currentPopulation * $scope.itemProduct.rateGrowth / 100;
 
       var demand =  $scope.iteration.currentPopulation * $scope.itemProduct.humanDemand / $scope.itemProduct.conversionGramsToTons;
-
       $scope.iteration.demand =  parseInt(Math.round(demand));
 
-      $scope.iteration.currentProduction = $scope.itemProduct.currentcrops;
+      $scope.iteration.currentProduction = $scope.itemProduct.currentCrops;
 
       $scope.iteration.xImport = $scope.itemProduct.imports;
 
@@ -268,8 +297,6 @@
         // Agregar el nuevo registro a la vista
         $scope.records.push(record);
       }
-
-      lego($scope.itemProduct.color);
 
       // Ocultar la modal
       $('#recordModal').modal('hide');
@@ -457,15 +484,6 @@
       }
     }
 
-     /**
-     * @class <strong>Asigna color de lego-producto, edificios y almacen</strong>
-     * @param {object} color Color actual del robot
-     */
-    function lego(color) {
-      $scope.showProduct = true;
-      angular.element('.square').css("background-color", color);
-    }
-
     /**
     * @class <strong>Permite buscar la página que contiene el registro actual a procesar </strong>
     * <br><br>
@@ -497,7 +515,31 @@
       }
     };
 
-    $scope.updateData();
+    // Selecciona el producto a procesar e iniciar valores de arranque
+    $scope.changeProduct = function(item){
+      if(item.code === 1) {
+        $scope.itemProduct =$scope.itemProducts[0];
+        $scope.records = $scope.tomatoRecords;
+      } else {
+        $scope.itemProduct =$scope.itemProducts[1];
+        $scope.records = $scope.lettuceRecords;
+      }
+
+      $scope.showProduct = true;
+      $scope.myStyle={'background-color':$scope.itemProduct.color};
+
+      if($scope.records.length == 0) {
+        $scope.updateData();
+      }
+
+      var data = $scope.records;
+      $scope.tableParams = new NgTableParams({ page: 1, count: $scope.sizetable }, { counts: [], dataset: data });
+  }
+
+    // Iniciallizar valores por defecto (tomate)
+    $scope.selectedItem = $scope.products[0];
+    $scope.changeProduct($scope.selectedItem);
+
 
   }]);
 })()
