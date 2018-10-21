@@ -196,3 +196,10 @@ h1 {
   border-style: double;
   border-color: Blue;
 }
+
+.unSeleted{
+  background-color: #CCD1D1;
+  color: BLACK;
+  border-style: double;
+  border-color: #CCD1D1;
+}

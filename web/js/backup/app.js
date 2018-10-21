@@ -47,6 +47,34 @@ angular.module('RoboticaApp', ["ngTable"])
         }
       ];
 
+      var formatNumber = {
+         separador: ".", // separador para los miles
+         sepDecimal: ',', // separador para los decimales
+         formatear:function (num){
+           num +='';
+           var splitStr = num.split('.');
+           var splitLeft = splitStr[0];
+           var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+           var regx = /(\d+)(\d{3})/;
+           while (regx.test(splitLeft)) {
+           splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+           }
+           return this.simbol + splitLeft +splitRight;
+         },
+         new:function(num, simbol){
+           this.simbol = simbol ||'';
+           console.log(num + "-- "+ this.formatear(num));
+           return this.formatear(num);
+         }
+     };
+
+     function removeFormatNumber(number) {
+       number = number.replace(/\./g,'');
+       number = number.replace(/\,/g,'');
+       console.log(number);
+       return number;
+     };
+
       // Arreglo con los resultados del Procesamiento
       // Sembrados - cosechados - totales en almacen
       $scope.processing = [
@@ -96,7 +124,7 @@ angular.module('RoboticaApp', ["ngTable"])
   * Variables Iniciales
   ******************************************************************/
   // Tab actual
-  $scope.tab = 1;
+  $scope.tab = 2;
 
   // Avance de la tabla
   $scope.sizetable = 8;

@@ -17,34 +17,36 @@
          <tbody>
         <tr class="info">
           <td><label>Población actual del territorio (país, provincia, estado etc):</label></td>
-          <td><input type="text" class="form-control" ng-model="calcPopulation.currentPopulation" placeholder="Población actual este año" ng-change="updateData()"></td>
+          <td><input type="number" class="form-control" ng-model="calcPopulation.currentPopulation"
+            placeholder="Población actual este año" ng-change="updateData()"></td>
           <td><label>100%</label></td>
         </tr>
         <tr class="active">
           <td><label>Cantidad de nacimientos en el territorio:</label></td>
-          <td><input type="number" class="form-control" ng-model="calcPopulation.births" placeholder="Nacimientos este año" ng-change="updateData()"></td>
-          <td><label>{{calcPopulation.births/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
+          <td><input type="number" class="form-control" ng-model="calcPopulation.births"
+            placeholder="Nacimientos este año" ng-change="updateData()"></td>
+          <td><label>{{calcPopulation.births*100/calcPopulation.currentPopulation | number : 3}}%</label></td>
         </tr>
         <tr class="info">
           <td><label>Cantidad de defunciones en el territorio:</label></td>
           <td><input type="number" class="form-control" ng-model="calcPopulation.deaths" placeholder="Defunciones este año" ng-change="updateData()"></td>
-          <td><label>{{calcPopulation.deaths/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
+          <td><label>{{calcPopulation.deaths/calcPopulation.currentPopulation*100 | number : 3}}%</label></td>
         </tr>
         <tr class="active">
           <td><label>Cantidad de inmigraciones en el territorio:</label></td>
           <td><input type="number" class="form-control" ng-model="calcPopulation.immigration" placeholder="Inmigraciones este año" ng-change="updateData()"></label></td>
-          <td><label>{{calcPopulation.immigration/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
+          <td><label>{{calcPopulation.immigration/calcPopulation.currentPopulation*100 | number : 3}}%</label></td>
         </tr>
         <tr class="info">
           <td><label>Cantidad de emigraciones en el territorio:</label></td>
           <td><input type="number" class="form-control" ng-model="calcPopulation.emigration" placeholder="Emigraciones este año" ng-change="updateData()"></label></td>
-          <td><label>{{calcPopulation.emigration/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
+          <td><label>{{calcPopulation.emigration/calcPopulation.currentPopulation*100 | number : 3}}%</label></td>
         </tr>
         <tr><td><label> </label></td><td></td><td></td></tr>
         <tr class="danger">
           <td><label>Tasa de crecimiento poblacional este año</label></td>
           <td><label>{{calcPopulation.populationGrowth}}</label></td>
-          <td><label>{{calcPopulation.populationGrowth/calcPopulation.currentPoblation*100 | number : 3}}%</label></td>
+          <td><label>{{calcPopulation.populationGrowth/calcPopulation.currentPopulation*100 | number : 3}}%</label></td>
         </tr>
       </tbody>
       <tfoot>

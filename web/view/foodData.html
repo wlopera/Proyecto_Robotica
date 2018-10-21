@@ -2,7 +2,14 @@
 <br>
 <br>
 <br>
-<h1>Nombre del alimento: Tomate</h1>
+<h2>Nombre del alimento:
+  <select ng-options="product as product.name for product in products"
+   ng-model="selectedItem"
+   ng-change="changeProduct(selectedItem)"
+   ng-disabled="toDisable"
+   ng-class="{unSeleted: (toDisable)}"
+   ></select>
+ </h2>
 <br>
 <hr>
 <!-- Primera tabla -->
@@ -81,23 +88,5 @@
       <td id="description">Es la cantidad de tiempo, expresado en días, que transcurre desde que la semilla del alimento es sembrada hasta que es cosechada o recogida</td>
       <td><input type="number" class="form-control" ng-model="itemProduct.harvestTime" placeholder="Tiempo cosecha" ng-change="updateData()"></td>
   </tr>
-</table>
-<!-- Cuarta tabla-->
-<table id="tabla4" class="table">
-  <h3>Parámetros adicionales de los alimentos</h3>
-<thead>
-  <tr class="success">
-      <td>Variable</td>
-      <td>Descripción</td>
-      <td>Valor</td>
-  </tr>
-</thead>
-<tbody>
-  <tr class="active">
-    <td>Color Asignado</td>
-    <td id="description">Es el color que tendrán las representaciones gráficas en el sistema Web y robótico</td>
-    <td><input class="form-control" ng-model="itemProduct.color" id="disabledInput" type="text" disabled>
-  </tr>
- </tbody>
 </table>
 </section>

@@ -2,7 +2,15 @@
     <div class="full col-sm-12">
         <h2>
           <br>
-          Ejecución de producción del {{ itemProduct.name }}
+          Ejecución de producción de
+
+          <select ng-options="product as product.name for product in products"
+           ng-model="selectedItem"
+           ng-change="changeProduct(selectedItem)"
+           ng-disabled="toDisable"
+           ng-class="{unSeleted: (toDisable)}"
+           ></select>
+
           <a href="#" class="btn btn-primary btn-md pull-right" ng-show= "showButton" ng-click="showModal()">
               <i class="glyphicon glyphicon-cog"></i>
                 Iniciar procesamiento</a>
@@ -55,7 +63,7 @@
         </div>
         <div col-sm-6 ng-show="showProduct">
           <div class="divCenter col-sm-2">
-            <div class="square">
+            <div class="square" ng-style="myStyle">
               <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showCultivate" ng-click="cultivate()">
                   <i class="glyphicon glyphicon-play"></i>
               </a>
@@ -64,7 +72,7 @@
           <div class="col-sm-3">
           </div>
           <div class="divCenter col-sm-2">
-            <div class="square">
+            <div class="square" ng-style="myStyle">
               <a href="#" class="btn btn-primary btn-xs pull-right" ng-show= "showProduce" ng-click="harvest()">
                   <i class="glyphicon glyphicon-play"></i>
               </a>
@@ -73,7 +81,7 @@
           <div class="col-sm-3">
           </div>
           <div class="divCenter col-sm-2">
-            <div class="square">Almacén de cosecha:<br>{{ totalStore }} {{ itemProduct.unit.abrev }}</div>
+            <div class="square" ng-style="myStyle">Almacén de cosecha:<br>{{ totalStore }} {{ itemProduct.unit.abrev }}</div>
           </div>
         </div>
         <div class="col-sm-3" id="progress"></div>
