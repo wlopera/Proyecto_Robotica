@@ -4,7 +4,11 @@
 <br>
 <h2>Nombre del alimento:
   <select ng-options="product as product.name for product in products"
-   ng-model="selectedItem" ng-change="changeProduct(selectedItem)"></select>
+   ng-model="selectedItem"
+   ng-change="changeProduct(selectedItem)"
+   ng-disabled="toDisable"
+   ng-class="{unSeleted: (toDisable)}"
+   ></select>
  </h2>
 <br>
 <hr>

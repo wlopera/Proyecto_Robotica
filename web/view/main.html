@@ -2,7 +2,15 @@
     <div class="full col-sm-12">
         <h2>
           <br>
-          Ejecución de producción del {{ itemProduct.name }}
+          Ejecución de producción de
+
+          <select ng-options="product as product.name for product in products"
+           ng-model="selectedItem"
+           ng-change="changeProduct(selectedItem)"
+           ng-disabled="toDisable"
+           ng-class="{unSeleted: (toDisable)}"
+           ></select>
+
           <a href="#" class="btn btn-primary btn-md pull-right" ng-show= "showButton" ng-click="showModal()">
               <i class="glyphicon glyphicon-cog"></i>
                 Iniciar procesamiento</a>
